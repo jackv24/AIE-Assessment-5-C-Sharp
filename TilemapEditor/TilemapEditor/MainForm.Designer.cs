@@ -54,7 +54,6 @@
             this.newButton = new System.Windows.Forms.Button();
             this.tilemapBox = new System.Windows.Forms.GroupBox();
             this.tilemapPanel = new System.Windows.Forms.Panel();
-            this.tilemapPictureBox = new System.Windows.Forms.PictureBox();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
             this.tilePictureBox = new System.Windows.Forms.PictureBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
@@ -70,8 +69,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numberRowsUpDown)).BeginInit();
             this.fileOptionsBox.SuspendLayout();
             this.tilemapBox.SuspendLayout();
-            this.tilemapPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tilemapPictureBox)).BeginInit();
             this.tileEditorBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.toolsBox.SuspendLayout();
@@ -170,6 +167,7 @@
             this.refreshButton.Text = "Refresh";
             this.helpTooltip.SetToolTip(this.refreshButton, "Updates the tilemap with the new values");
             this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
             // tileHeightUpDown
             // 
@@ -303,22 +301,12 @@
             // tilemapPanel
             // 
             this.tilemapPanel.AutoScroll = true;
-            this.tilemapPanel.Controls.Add(this.tilemapPictureBox);
+            this.tilemapPanel.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.tilemapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tilemapPanel.Location = new System.Drawing.Point(3, 16);
             this.tilemapPanel.Name = "tilemapPanel";
             this.tilemapPanel.Size = new System.Drawing.Size(264, 391);
             this.tilemapPanel.TabIndex = 0;
-            // 
-            // tilemapPictureBox
-            // 
-            this.tilemapPictureBox.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tilemapPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.tilemapPictureBox.Name = "tilemapPictureBox";
-            this.tilemapPictureBox.Size = new System.Drawing.Size(256, 384);
-            this.tilemapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.tilemapPictureBox.TabIndex = 6;
-            this.tilemapPictureBox.TabStop = false;
             // 
             // tileEditorBox
             // 
@@ -332,11 +320,12 @@
             // 
             // tilePictureBox
             // 
-            this.tilePictureBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tilePictureBox.Location = new System.Drawing.Point(3, 16);
             this.tilePictureBox.Name = "tilePictureBox";
             this.tilePictureBox.Size = new System.Drawing.Size(389, 391);
+            this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.tilePictureBox.TabIndex = 1;
             this.tilePictureBox.TabStop = false;
             // 
@@ -404,9 +393,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numberRowsUpDown)).EndInit();
             this.fileOptionsBox.ResumeLayout(false);
             this.tilemapBox.ResumeLayout(false);
-            this.tilemapPanel.ResumeLayout(false);
-            this.tilemapPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tilemapPictureBox)).EndInit();
             this.tileEditorBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.toolsBox.ResumeLayout(false);
@@ -448,7 +434,6 @@
         private System.Windows.Forms.Button toolEraserButton;
         private System.Windows.Forms.Button toolPencilButton;
         private System.Windows.Forms.Panel tilemapPanel;
-        private System.Windows.Forms.PictureBox tilemapPictureBox;
         private System.Windows.Forms.ToolTip helpTooltip;
     }
 }
