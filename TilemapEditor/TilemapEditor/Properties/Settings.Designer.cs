@@ -25,31 +25,7 @@ namespace TilemapEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("6")]
-        public int NumberOfRows {
-            get {
-                return ((int)(this["NumberOfRows"]));
-            }
-            set {
-                this["NumberOfRows"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int NumberOfColumns {
-            get {
-                return ((int)(this["NumberOfColumns"]));
-            }
-            set {
-                this["NumberOfColumns"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("64")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int TileWidth {
             get {
                 return ((int)(this["TileWidth"]));
@@ -61,7 +37,7 @@ namespace TilemapEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("64")]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
         public int TileHeight {
             get {
                 return ((int)(this["TileHeight"]));

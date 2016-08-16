@@ -43,35 +43,32 @@
             this.tileHeightLabel = new System.Windows.Forms.Label();
             this.tileWidthUpDown = new System.Windows.Forms.NumericUpDown();
             this.tileWidthLabel = new System.Windows.Forms.Label();
-            this.numberColumnsUpDown = new System.Windows.Forms.NumericUpDown();
-            this.columnsLabel = new System.Windows.Forms.Label();
-            this.numberRowsUpDown = new System.Windows.Forms.NumericUpDown();
-            this.rowsLabel = new System.Windows.Forms.Label();
             this.fileOptionsBox = new System.Windows.Forms.GroupBox();
             this.saveAsButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.newButton = new System.Windows.Forms.Button();
             this.tilemapBox = new System.Windows.Forms.GroupBox();
+            this.zoomTrackBar = new System.Windows.Forms.TrackBar();
             this.tilemapPanel = new System.Windows.Forms.Panel();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
-            this.tilePictureBox = new System.Windows.Forms.PictureBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
             this.toolFillButton = new System.Windows.Forms.Button();
             this.toolEraserButton = new System.Windows.Forms.Button();
             this.toolPencilButton = new System.Windows.Forms.Button();
             this.helpTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.zoomLabel = new System.Windows.Forms.Label();
+            this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tileHeightUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numberColumnsUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numberRowsUpDown)).BeginInit();
             this.fileOptionsBox.SuspendLayout();
             this.tilemapBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).BeginInit();
             this.tileEditorBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.toolsBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -142,25 +139,23 @@
             // 
             // tilemapOptionsBox
             // 
+            this.tilemapOptionsBox.Controls.Add(this.zoomLabel);
+            this.tilemapOptionsBox.Controls.Add(this.zoomTrackBar);
             this.tilemapOptionsBox.Controls.Add(this.refreshButton);
             this.tilemapOptionsBox.Controls.Add(this.tileHeightUpDown);
             this.tilemapOptionsBox.Controls.Add(this.tileHeightLabel);
             this.tilemapOptionsBox.Controls.Add(this.tileWidthUpDown);
             this.tilemapOptionsBox.Controls.Add(this.tileWidthLabel);
-            this.tilemapOptionsBox.Controls.Add(this.numberColumnsUpDown);
-            this.tilemapOptionsBox.Controls.Add(this.columnsLabel);
-            this.tilemapOptionsBox.Controls.Add(this.numberRowsUpDown);
-            this.tilemapOptionsBox.Controls.Add(this.rowsLabel);
             this.tilemapOptionsBox.Location = new System.Drawing.Point(13, 28);
             this.tilemapOptionsBox.Name = "tilemapOptionsBox";
-            this.tilemapOptionsBox.Size = new System.Drawing.Size(200, 156);
+            this.tilemapOptionsBox.Size = new System.Drawing.Size(200, 154);
             this.tilemapOptionsBox.TabIndex = 1;
             this.tilemapOptionsBox.TabStop = false;
             this.tilemapOptionsBox.Text = "Tilemap Options";
             // 
             // refreshButton
             // 
-            this.refreshButton.Location = new System.Drawing.Point(118, 125);
+            this.refreshButton.Location = new System.Drawing.Point(119, 119);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
             this.refreshButton.TabIndex = 8;
@@ -171,7 +166,7 @@
             // 
             // tileHeightUpDown
             // 
-            this.tileHeightUpDown.Location = new System.Drawing.Point(154, 98);
+            this.tileHeightUpDown.Location = new System.Drawing.Point(153, 42);
             this.tileHeightUpDown.Name = "tileHeightUpDown";
             this.tileHeightUpDown.Size = new System.Drawing.Size(40, 20);
             this.tileHeightUpDown.TabIndex = 7;
@@ -180,7 +175,7 @@
             // 
             this.tileHeightLabel.AutoSize = true;
             this.tileHeightLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tileHeightLabel.Location = new System.Drawing.Point(7, 98);
+            this.tileHeightLabel.Location = new System.Drawing.Point(6, 42);
             this.tileHeightLabel.Name = "tileHeightLabel";
             this.tileHeightLabel.Size = new System.Drawing.Size(70, 16);
             this.tileHeightLabel.TabIndex = 6;
@@ -188,7 +183,7 @@
             // 
             // tileWidthUpDown
             // 
-            this.tileWidthUpDown.Location = new System.Drawing.Point(154, 72);
+            this.tileWidthUpDown.Location = new System.Drawing.Point(153, 16);
             this.tileWidthUpDown.Name = "tileWidthUpDown";
             this.tileWidthUpDown.Size = new System.Drawing.Size(40, 20);
             this.tileWidthUpDown.TabIndex = 5;
@@ -197,45 +192,11 @@
             // 
             this.tileWidthLabel.AutoSize = true;
             this.tileWidthLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tileWidthLabel.Location = new System.Drawing.Point(7, 72);
+            this.tileWidthLabel.Location = new System.Drawing.Point(6, 16);
             this.tileWidthLabel.Name = "tileWidthLabel";
             this.tileWidthLabel.Size = new System.Drawing.Size(64, 16);
             this.tileWidthLabel.TabIndex = 4;
             this.tileWidthLabel.Text = "Tile width";
-            // 
-            // numberColumnsUpDown
-            // 
-            this.numberColumnsUpDown.Location = new System.Drawing.Point(154, 46);
-            this.numberColumnsUpDown.Name = "numberColumnsUpDown";
-            this.numberColumnsUpDown.Size = new System.Drawing.Size(40, 20);
-            this.numberColumnsUpDown.TabIndex = 3;
-            // 
-            // columnsLabel
-            // 
-            this.columnsLabel.AutoSize = true;
-            this.columnsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.columnsLabel.Location = new System.Drawing.Point(7, 46);
-            this.columnsLabel.Name = "columnsLabel";
-            this.columnsLabel.Size = new System.Drawing.Size(123, 16);
-            this.columnsLabel.TabIndex = 2;
-            this.columnsLabel.Text = "Number of columns";
-            // 
-            // numberRowsUpDown
-            // 
-            this.numberRowsUpDown.Location = new System.Drawing.Point(154, 20);
-            this.numberRowsUpDown.Name = "numberRowsUpDown";
-            this.numberRowsUpDown.Size = new System.Drawing.Size(40, 20);
-            this.numberRowsUpDown.TabIndex = 1;
-            // 
-            // rowsLabel
-            // 
-            this.rowsLabel.AutoSize = true;
-            this.rowsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rowsLabel.Location = new System.Drawing.Point(7, 20);
-            this.rowsLabel.Name = "rowsLabel";
-            this.rowsLabel.Size = new System.Drawing.Size(101, 16);
-            this.rowsLabel.TabIndex = 0;
-            this.rowsLabel.Text = "Number of rows";
             // 
             // fileOptionsBox
             // 
@@ -243,7 +204,7 @@
             this.fileOptionsBox.Controls.Add(this.openButton);
             this.fileOptionsBox.Controls.Add(this.saveButton);
             this.fileOptionsBox.Controls.Add(this.newButton);
-            this.fileOptionsBox.Location = new System.Drawing.Point(13, 191);
+            this.fileOptionsBox.Location = new System.Drawing.Point(14, 188);
             this.fileOptionsBox.Name = "fileOptionsBox";
             this.fileOptionsBox.Size = new System.Drawing.Size(200, 80);
             this.fileOptionsBox.TabIndex = 2;
@@ -298,18 +259,29 @@
             this.tilemapBox.TabStop = false;
             this.tilemapBox.Text = "Tilemap";
             // 
+            // zoomTrackBar
+            // 
+            this.zoomTrackBar.Location = new System.Drawing.Point(104, 68);
+            this.zoomTrackBar.Maximum = 5;
+            this.zoomTrackBar.Minimum = 1;
+            this.zoomTrackBar.Name = "zoomTrackBar";
+            this.zoomTrackBar.Size = new System.Drawing.Size(89, 45);
+            this.zoomTrackBar.TabIndex = 9;
+            this.zoomTrackBar.Value = 1;
+            // 
             // tilemapPanel
             // 
             this.tilemapPanel.AutoScroll = true;
             this.tilemapPanel.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.tilemapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tilemapPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.tilemapPanel.Location = new System.Drawing.Point(3, 16);
             this.tilemapPanel.Name = "tilemapPanel";
-            this.tilemapPanel.Size = new System.Drawing.Size(264, 391);
+            this.tilemapPanel.Size = new System.Drawing.Size(264, 340);
             this.tilemapPanel.TabIndex = 0;
             // 
             // tileEditorBox
             // 
+            this.tileEditorBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tileEditorBox.Controls.Add(this.tilePictureBox);
             this.tileEditorBox.Location = new System.Drawing.Point(497, 28);
             this.tileEditorBox.Name = "tileEditorBox";
@@ -318,19 +290,9 @@
             this.tileEditorBox.TabStop = false;
             this.tileEditorBox.Text = "Tile Editor";
             // 
-            // tilePictureBox
-            // 
-            this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tilePictureBox.Location = new System.Drawing.Point(3, 16);
-            this.tilePictureBox.Name = "tilePictureBox";
-            this.tilePictureBox.Size = new System.Drawing.Size(389, 391);
-            this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.tilePictureBox.TabIndex = 1;
-            this.tilePictureBox.TabStop = false;
-            // 
             // toolsBox
             // 
+            this.toolsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.toolsBox.Controls.Add(this.toolFillButton);
             this.toolsBox.Controls.Add(this.toolEraserButton);
             this.toolsBox.Controls.Add(this.toolPencilButton);
@@ -368,6 +330,26 @@
             this.helpTooltip.SetToolTip(this.toolPencilButton, "Edit individual pixels");
             this.toolPencilButton.UseVisualStyleBackColor = true;
             // 
+            // zoomLabel
+            // 
+            this.zoomLabel.AutoSize = true;
+            this.zoomLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.zoomLabel.Location = new System.Drawing.Point(6, 70);
+            this.zoomLabel.Name = "zoomLabel";
+            this.zoomLabel.Size = new System.Drawing.Size(94, 16);
+            this.zoomLabel.TabIndex = 10;
+            this.zoomLabel.Text = "Preview Zoom";
+            // 
+            // tilePictureBox
+            // 
+            this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.tilePictureBox.Location = new System.Drawing.Point(3, 16);
+            this.tilePictureBox.Name = "tilePictureBox";
+            this.tilePictureBox.Size = new System.Drawing.Size(389, 391);
+            this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.tilePictureBox.TabIndex = 6;
+            this.tilePictureBox.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -389,13 +371,12 @@
             this.tilemapOptionsBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tileHeightUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numberColumnsUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numberRowsUpDown)).EndInit();
             this.fileOptionsBox.ResumeLayout(false);
             this.tilemapBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.zoomTrackBar)).EndInit();
             this.tileEditorBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.toolsBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -411,10 +392,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.GroupBox tilemapOptionsBox;
-        private System.Windows.Forms.NumericUpDown numberRowsUpDown;
-        private System.Windows.Forms.Label rowsLabel;
-        private System.Windows.Forms.NumericUpDown numberColumnsUpDown;
-        private System.Windows.Forms.Label columnsLabel;
         private System.Windows.Forms.NumericUpDown tileHeightUpDown;
         private System.Windows.Forms.Label tileHeightLabel;
         private System.Windows.Forms.NumericUpDown tileWidthUpDown;
@@ -428,13 +405,15 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.GroupBox tilemapBox;
         private System.Windows.Forms.GroupBox tileEditorBox;
-        private System.Windows.Forms.PictureBox tilePictureBox;
         private System.Windows.Forms.GroupBox toolsBox;
         private System.Windows.Forms.Button toolFillButton;
         private System.Windows.Forms.Button toolEraserButton;
         private System.Windows.Forms.Button toolPencilButton;
         private System.Windows.Forms.Panel tilemapPanel;
         private System.Windows.Forms.ToolTip helpTooltip;
+        private System.Windows.Forms.TrackBar zoomTrackBar;
+        private PixelPictureBox tilePictureBox;
+        private System.Windows.Forms.Label zoomLabel;
     }
 }
 

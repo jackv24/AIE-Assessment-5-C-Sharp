@@ -2,17 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TilemapEditor.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="NumberOfRows" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">6</Value>
-    </Setting>
-    <Setting Name="NumberOfColumns" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">4</Value>
-    </Setting>
     <Setting Name="TileWidth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">64</Value>
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="TileHeight" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">64</Value>
+      <Value Profile="(Default)">16</Value>
     </Setting>
     <Setting Name="TileOutlineColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DimGray</Value>
