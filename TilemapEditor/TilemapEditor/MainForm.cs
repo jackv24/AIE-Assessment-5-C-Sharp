@@ -91,6 +91,9 @@ namespace TilemapEditor
             {
                 using (OpenFileDialog selectFile = new OpenFileDialog())
                 {
+                    selectFile.Filter = "Image Files (*.jpeg, *.png, *.jpg, *.gif)|*.jpeg;*.png;*.jpg;*.gif|JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+                    selectFile.Title = "Please select a tile map to edit.";
+
                     if (selectFile.ShowDialog() == DialogResult.OK)
                         //load tilemap
                         currentTilemap = Image.FromFile(selectFile.FileName);
@@ -102,12 +105,8 @@ namespace TilemapEditor
             int tileHeight = (int)tileHeightUpDown.Value;
             int zoomAmount = zoomTrackBar.Value;
 
-            //Calculate rows and columns
-            int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
-            int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
-
             //Show an error if any values are zero
-            if (numRows <= 0 || numColumns <= 0 || tileWidth <= 0 || tileHeight <= 0)
+            if (tileWidth <= 0 || tileHeight <= 0)
             {
                 MessageBox.Show(
                 "Tilemap values can not be zero!",
@@ -116,16 +115,20 @@ namespace TilemapEditor
                 MessageBoxIcon.Error);
             }
 
-            //Remove existing pictureboxes
-            while (tilemapPanel.Controls.Count > 0)
-                tilemapPanel.Controls[0].Dispose();
-
-            //Create new arrays at specified sizes
-            tileBitmaps = new Bitmap[numColumns, numRows];
-            pictureBoxes = new PixelPictureBox[numColumns, numRows];
-
             if (currentTilemap != null)
             {
+                //Remove existing pictureboxes
+                while (tilemapPanel.Controls.Count > 0)
+                    tilemapPanel.Controls[0].Dispose();
+
+                //Calculate rows and columns
+                int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
+                int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
+
+                //Create new arrays at specified sizes
+                tileBitmaps = new Bitmap[numColumns, numRows];
+                pictureBoxes = new PixelPictureBox[numColumns, numRows];
+
                 //Generate picturebox grid
                 for (int i = 0; i < numColumns; i++)
                 {
