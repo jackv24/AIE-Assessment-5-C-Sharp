@@ -427,10 +427,11 @@ namespace TilemapEditor
                     if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
                     {
                         Bitmap bmp = new Bitmap(box.Image);
-                        float pixelRatio = (float)bmp.Width / box.Width;
+                        float widthRatio = (float)bmp.Width / box.Width;
+                        float heightRatio = (float)bmp.Height / box.Height;
 
-                        int x = (int)Math.Ceiling(e.X * pixelRatio) - 1;
-                        int y = (int)Math.Ceiling(e.Y * pixelRatio) - 1;
+                        int x = (int)Math.Ceiling(e.X * widthRatio) - 1;
+                        int y = (int)Math.Ceiling(e.Y * heightRatio) - 1;
 
                         //If click was made inside picture box
                         if (x < bmp.Width && x >= 0 && y < bmp.Height && y >= 0)

@@ -38,9 +38,28 @@ namespace TilemapEditor
             }
         }
 
+        [Description("Resises vertically to keep aspect ratio"), Category("Layout")]
+        public bool KeepAspect { get; set; }
+
+        //Override image property and create new event handler
+        public event EventHandler ImageChanged;
+        public Image Image
+        {
+            get { return base.Image; }
+            set
+            {
+                base.Image = value;
+                if (ImageChanged != null)
+                    ImageChanged(this, new EventArgs());
+            }
+        }
+
         public PixelPictureBox()
         {
             InitializeComponent();
+
+            Resize += new EventHandler(box_Resize);
+            ImageChanged += new EventHandler(box_Resize);
 
             borderColor = Color.Empty;
             borderWidth = 1;
@@ -63,6 +82,13 @@ namespace TilemapEditor
             //If not basic outline, Draw rectangle OVER image
             if(drawOver)
                 pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
+        }
+
+        private void box_Resize(object sender, EventArgs e)
+        {
+            //Resize picturebox vertically to keep the aspect ratio of the image
+            if(KeepAspect && Image != null)
+                Height = Width * (Image.Height / Image.Width);
         }
     }
 }

@@ -52,7 +52,6 @@
             this.newButton = new System.Windows.Forms.Button();
             this.tilemapBox = new System.Windows.Forms.GroupBox();
             this.tilemapPanel = new System.Windows.Forms.Panel();
-            this.tileEditorBox = new System.Windows.Forms.GroupBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
             this.toolColorPickerButton = new System.Windows.Forms.Button();
             this.toolFillButton = new System.Windows.Forms.Button();
@@ -68,7 +67,7 @@
             this.toolStripToolStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.tileSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.editorSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.tileEditorBox = new System.Windows.Forms.GroupBox();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -77,7 +76,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).BeginInit();
             this.fileOptionsBox.SuspendLayout();
             this.tilemapBox.SuspendLayout();
-            this.tileEditorBox.SuspendLayout();
             this.toolsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).BeginInit();
@@ -87,9 +85,7 @@
             this.tileSplitContainer.Panel1.SuspendLayout();
             this.tileSplitContainer.Panel2.SuspendLayout();
             this.tileSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editorSplitContainer)).BeginInit();
-            this.editorSplitContainer.Panel1.SuspendLayout();
-            this.editorSplitContainer.SuspendLayout();
+            this.tileEditorBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -341,18 +337,6 @@
             this.tilemapPanel.Size = new System.Drawing.Size(272, 477);
             this.tilemapPanel.TabIndex = 0;
             // 
-            // tileEditorBox
-            // 
-            this.tileEditorBox.Controls.Add(this.tilePictureBox);
-            this.tileEditorBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tileEditorBox.Location = new System.Drawing.Point(0, 0);
-            this.tileEditorBox.Name = "tileEditorBox";
-            this.tileEditorBox.Padding = new System.Windows.Forms.Padding(5);
-            this.tileEditorBox.Size = new System.Drawing.Size(388, 401);
-            this.tileEditorBox.TabIndex = 4;
-            this.tileEditorBox.TabStop = false;
-            this.tileEditorBox.Text = "Tile Editor";
-            // 
             // toolsBox
             // 
             this.toolsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -504,24 +488,22 @@
             // 
             // tileSplitContainer.Panel2
             // 
-            this.tileSplitContainer.Panel2.Controls.Add(this.editorSplitContainer);
+            this.tileSplitContainer.Panel2.Controls.Add(this.tileEditorBox);
             this.tileSplitContainer.Size = new System.Drawing.Size(674, 500);
             this.tileSplitContainer.SplitterDistance = 282;
             this.tileSplitContainer.TabIndex = 8;
             // 
-            // editorSplitContainer
+            // tileEditorBox
             // 
-            this.editorSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.editorSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.editorSplitContainer.Name = "editorSplitContainer";
-            this.editorSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // editorSplitContainer.Panel1
-            // 
-            this.editorSplitContainer.Panel1.Controls.Add(this.tileEditorBox);
-            this.editorSplitContainer.Size = new System.Drawing.Size(388, 500);
-            this.editorSplitContainer.SplitterDistance = 401;
-            this.editorSplitContainer.TabIndex = 5;
+            this.tileEditorBox.Controls.Add(this.tilePictureBox);
+            this.tileEditorBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tileEditorBox.Location = new System.Drawing.Point(0, 0);
+            this.tileEditorBox.Name = "tileEditorBox";
+            this.tileEditorBox.Padding = new System.Windows.Forms.Padding(5);
+            this.tileEditorBox.Size = new System.Drawing.Size(388, 500);
+            this.tileEditorBox.TabIndex = 4;
+            this.tileEditorBox.TabStop = false;
+            this.tileEditorBox.Text = "Tile Editor";
             // 
             // tilePictureBox
             // 
@@ -530,11 +512,12 @@
             this.tilePictureBox.BorderColor = System.Drawing.Color.Empty;
             this.tilePictureBox.BorderWidth = 1;
             this.tilePictureBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tilePictureBox.KeepAspect = true;
             this.tilePictureBox.Location = new System.Drawing.Point(5, 18);
             this.tilePictureBox.Name = "tilePictureBox";
             this.tilePictureBox.Size = new System.Drawing.Size(378, 378);
-            this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.tilePictureBox.TabIndex = 6;
             this.tilePictureBox.TabStop = false;
             this.tilePictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tilePictureBox_MouseDown);
@@ -570,7 +553,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).EndInit();
             this.fileOptionsBox.ResumeLayout(false);
             this.tilemapBox.ResumeLayout(false);
-            this.tileEditorBox.ResumeLayout(false);
             this.toolsBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).EndInit();
@@ -581,9 +563,7 @@
             this.tileSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tileSplitContainer)).EndInit();
             this.tileSplitContainer.ResumeLayout(false);
-            this.editorSplitContainer.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.editorSplitContainer)).EndInit();
-            this.editorSplitContainer.ResumeLayout(false);
+            this.tileEditorBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -612,7 +592,6 @@
         private System.Windows.Forms.Button newButton;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.GroupBox tilemapBox;
-        private System.Windows.Forms.GroupBox tileEditorBox;
         private System.Windows.Forms.GroupBox toolsBox;
         private System.Windows.Forms.Button toolFillButton;
         private System.Windows.Forms.Button toolEraserButton;
@@ -632,7 +611,7 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.Button switchColoursButton;
         private System.Windows.Forms.SplitContainer tileSplitContainer;
-        private System.Windows.Forms.SplitContainer editorSplitContainer;
+        private System.Windows.Forms.GroupBox tileEditorBox;
     }
 }
 
