@@ -64,8 +64,9 @@
             this.colorSecondaryBox = new System.Windows.Forms.PictureBox();
             this.colourBox = new System.Windows.Forms.GroupBox();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripToolStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.switchColoursButton = new System.Windows.Forms.Button();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -110,7 +111,7 @@
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -118,7 +119,7 @@
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -126,26 +127,28 @@
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(174, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(183, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -252,6 +255,7 @@
             this.saveAsButton.Text = "Save As";
             this.helpTooltip.SetToolTip(this.saveAsButton, "Save tile map as a new file");
             this.saveAsButton.UseVisualStyleBackColor = true;
+            this.saveAsButton.Click += new System.EventHandler(this.saveAsButton_Click);
             // 
             // openButton
             // 
@@ -273,6 +277,7 @@
             this.saveButton.Text = "Save";
             this.helpTooltip.SetToolTip(this.saveButton, "Save tile map (overwriting previous file)");
             this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // newButton
             // 
@@ -287,7 +292,8 @@
             // 
             // tilemapBox
             // 
-            this.tilemapBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tilemapBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tilemapBox.Controls.Add(this.tilemapPanel);
             this.tilemapBox.Location = new System.Drawing.Point(220, 28);
@@ -381,6 +387,7 @@
             // 
             // colorSwatchesPanel
             // 
+            this.colorSwatchesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.colorSwatchesPanel.Location = new System.Drawing.Point(7, 82);
             this.colorSwatchesPanel.Name = "colorSwatchesPanel";
             this.colorSwatchesPanel.Size = new System.Drawing.Size(66, 195);
@@ -411,7 +418,9 @@
             // 
             // colourBox
             // 
-            this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.colourBox.Controls.Add(this.switchColoursButton);
             this.colourBox.Controls.Add(this.colorPrimaryBox);
             this.colourBox.Controls.Add(this.colorSecondaryBox);
             this.colourBox.Controls.Add(this.colorSwatchesPanel);
@@ -427,6 +436,12 @@
             this.colorPicker.AnyColor = true;
             this.colorPicker.SolidColorOnly = true;
             // 
+            // toolStripToolStatus
+            // 
+            this.toolStripToolStatus.Name = "toolStripToolStatus";
+            this.toolStripToolStatus.Size = new System.Drawing.Size(115, 17);
+            this.toolStripToolStatus.Text = "Selected Tool: Pencil";
+            // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -437,11 +452,16 @@
             this.statusStrip.TabIndex = 7;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // toolStripToolStatus
+            // switchColoursButton
             // 
-            this.toolStripToolStatus.Name = "toolStripToolStatus";
-            this.toolStripToolStatus.Size = new System.Drawing.Size(116, 17);
-            this.toolStripToolStatus.Text = "Selected Tool: Pencil";
+            this.switchColoursButton.Location = new System.Drawing.Point(50, 60);
+            this.switchColoursButton.Name = "switchColoursButton";
+            this.switchColoursButton.Size = new System.Drawing.Size(18, 18);
+            this.switchColoursButton.TabIndex = 3;
+            this.switchColoursButton.Text = "<";
+            this.helpTooltip.SetToolTip(this.switchColoursButton, "Switch colours (X)");
+            this.switchColoursButton.UseVisualStyleBackColor = true;
+            this.switchColoursButton.Click += new System.EventHandler(this.switchColoursButton_Click);
             // 
             // tilePictureBox
             // 
@@ -539,8 +559,9 @@
         private System.Windows.Forms.ColorDialog colorPicker;
         private System.Windows.Forms.Panel colorSwatchesPanel;
         private System.Windows.Forms.PictureBox colorSecondaryBox;
-        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripToolStatus;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.Button switchColoursButton;
     }
 }
 

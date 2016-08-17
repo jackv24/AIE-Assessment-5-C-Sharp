@@ -7,17 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace TilemapEditor
 {
     public partial class MainForm : Form
     {
+        //The tilemap image loaded
         Image currentTilemap;
+        //The path from which it was loaded
+        string lastFilePath = "";
 
+        //Ask to save if unsaved changes
+        bool unsavedChanges = false;
+
+        //Tile selection
         PixelPictureBox selectedTile;
         PixelPictureBox lastSelectedTile;
 
-        Bitmap[,] tileBitmaps;
+        //Individual tiles
         PixelPictureBox[,] pictureBoxes;
 
         public enum Tools
@@ -74,16 +82,19 @@ namespace TilemapEditor
         //Form events
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //Display a confirmation dialog
-            DialogResult result = MessageBox.Show(
-                "Are you sure you want to exit the application?\nAll unsaved work will be lost!",
-                Application.ProductName,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            if (unsavedChanges)
+            {
+                //Display a confirmation dialog
+                DialogResult result = MessageBox.Show(
+                    "Are you sure you want to exit the application?\nAll unsaved work will be lost!",
+                    Application.ProductName,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
 
-            //If user clicks no, do not close the application
-            if (result == DialogResult.No)
-                e.Cancel = true;
+                //If user clicks no, do not close the application
+                if (result == DialogResult.No)
+                    e.Cancel = true;
+            }
         }
 
         //Menu strip events
@@ -91,6 +102,10 @@ namespace TilemapEditor
         private void newToolStripMenuItem_Click(object sender, EventArgs e) { CreateNew(); }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e) { OpenFile(true); }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) { SaveFile(false); }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) { SaveFile(true); }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -102,6 +117,10 @@ namespace TilemapEditor
         private void newButton_Click(object sender, EventArgs e) { CreateNew(); }
 
         private void openButton_Click(object sender, EventArgs e) { OpenFile(true); }
+
+        private void saveButton_Click(object sender, EventArgs e) { SaveFile(false); }
+
+        private void saveAsButton_Click(object sender, EventArgs e) { SaveFile(true); }
 
         private void refreshButton_Click(object sender, EventArgs e) { OpenFile(false); }
 
@@ -139,8 +158,14 @@ namespace TilemapEditor
                     selectFile.Title = "Please select a tile map to edit.";
 
                     if (selectFile.ShowDialog() == DialogResult.OK)
+                    {
                         //load tilemap
                         currentTilemap = Image.FromFile(selectFile.FileName);
+
+                        lastFilePath = selectFile.FileName;
+                    }
+                    else
+                        return;
                 }
             }
 
@@ -171,8 +196,7 @@ namespace TilemapEditor
                 int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
                 int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
 
-                //Create new arrays at specified sizes
-                tileBitmaps = new Bitmap[numColumns, numRows];
+                //Create new array at specified sizes
                 pictureBoxes = new PixelPictureBox[numColumns, numRows];
 
                 //Generate picturebox grid
@@ -203,11 +227,96 @@ namespace TilemapEditor
                         box.Click += new EventHandler(pictureBoxes_Click);
 
                         //Add to arrays
-                        tileBitmaps[i, j] = bmp;
                         pictureBoxes[i, j] = box;
                     }
                 }
             }
+        }
+
+        private void SaveFile(bool showDialog)
+        {
+            if (showDialog && currentTilemap != null)
+            {
+                using (SaveFileDialog selectFile = new SaveFileDialog())
+                {
+                    selectFile.Filter = "Image Files (*.jpeg, *.png, *.jpg, *.gif)|*.jpeg;*.png;*.jpg;*.gif|JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+                    selectFile.Title = "Please select a save location.";
+                    selectFile.FilterIndex = 3;
+
+                    if (selectFile.ShowDialog() == DialogResult.OK)
+                        lastFilePath = selectFile.FileName;
+                    else
+                        return;
+                }
+            }
+            //If the file already exists
+            else if(File.Exists(lastFilePath))
+            {
+                //Confirm that the user wants to overwrite it
+                DialogResult result = MessageBox.Show(
+                "This file already exists.\n\nDo you want to overwrite it?",
+                Application.ProductName,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+                //If the user chooses no, abort saving
+                if (result == DialogResult.No)
+                    return;
+            }
+
+            //Cache values from form
+            int tileWidth = (int)tileWidthUpDown.Value;
+            int tileHeight = (int)tileHeightUpDown.Value;
+
+            if(currentTilemap == null && lastFilePath != "")
+                //load tilemap (may have been disposed
+                currentTilemap = Image.FromFile(lastFilePath);
+
+            if(currentTilemap != null)
+            {
+                //Calculate rows and columns
+                int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
+                int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
+
+                //Free image so that it can be overwritten
+                currentTilemap.Dispose();
+                currentTilemap = null;
+
+                //Create new bitmap for output tilemap
+                Bitmap outputMap = new Bitmap(numColumns * tileWidth, numRows * tileHeight);
+
+                using (Graphics g = Graphics.FromImage(outputMap))
+                {
+                    //Iterate through tile map
+                    for (int i = 0; i < numColumns; i++)
+                    {
+                        for (int j = 0; j < numRows; j++)
+                        {
+                            //Draw relevant pixels to bitmap
+                            g.DrawImage(pictureBoxes[i, j].Image, new Rectangle(i * tileWidth, j * tileHeight, tileWidth, tileHeight), new Rectangle(0, 0, tileWidth, tileHeight), GraphicsUnit.Pixel);
+                        }
+                    }
+                }
+
+                //Try to save file (catches exception)
+                try
+                {
+                    using (FileStream fs = new FileStream(lastFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        outputMap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+
+                        unsavedChanges = false;
+                        MessageBox.Show("File saved!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Show error if exception is thrown
+                    MessageBox.Show("Error: Could not access the file.\n\n" + ex.Message, "Saving failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+                MessageBox.Show("No file to save!");
         }
 
         //Tileset Picture box event handlers
@@ -249,31 +358,39 @@ namespace TilemapEditor
         }
 
         //Tile editor picturebox
+        //Use property to access colour so displays can be updated
         private Color primaryColor = Color.Black;
         public Color PrimaryColor
         {
             get { return primaryColor; }
             set
             {
+                //Only add swatch if colour has changed
+                if(primaryColor != value)
+                    AddSwatch(primaryColor);
+
                 primaryColor = value;
                 colorPrimaryBox.BackColor = primaryColor;
-                AddSwatch(primaryColor);
             }
         }
 
+        //Use property to access colour so displays can be updated
         private Color secondaryColor = Color.Black;
         public Color SecondaryColor
         {
             get { return secondaryColor; }
             set
             {
+                //Only add swatch if colour has changed
+                if (secondaryColor != value)
+                    AddSwatch(secondaryColor);
+
                 secondaryColor = value;
                 colorSecondaryBox.BackColor = secondaryColor;
-                AddSwatch(secondaryColor);
             }
         }
 
-        List<Color> colorSwatches = new List<Color>();
+        List<PictureBox> colorSwatches = new List<PictureBox>();
 
         bool hasClicked = false;
 
@@ -328,6 +445,9 @@ namespace TilemapEditor
                                 selectedTile.Image = bmp;
                             }
                         }
+
+                        //Changes were made
+                        unsavedChanges = true;
                     }
                 }
             }
@@ -357,24 +477,28 @@ namespace TilemapEditor
 
         private void AddSwatch(Color color)
         {
-            if (!colorSwatches.Contains(color))
+            //Create new picturebox as child of tilemapPanel
+            PictureBox box = new PictureBox();
+            colorSwatches.Add(box);
+            colorSwatchesPanel.Controls.Add(box);
+            box.Size = new Size(20, 20);
+            box.BackColor = color;
+            box.MouseClick += new MouseEventHandler(colorSwatchBox_Click);
+
+            //Reposition swatches
+            for (int i = colorSwatches.Count - 1; i >= 0; i--)
             {
-                colorSwatches.Add(color);
-                int index = colorSwatches.Count - 1;
+                //Position in reverse order (newest first)
+                int index = colorSwatches.Count - 1 - i;
 
                 int height = (int)Math.Floor((float)index / 3);
-                for (int i = height; i > 0; i--)
+                //Flow to next line
+                for (int j = height; j > 0; j--)
                 {
                     index -= 3;
                 }
 
-                //Create new picturebox as child of tilemapPanel
-                PictureBox box = new PictureBox();
-                colorSwatchesPanel.Controls.Add(box);
-                box.Location = new Point(index * 22, height * 22);
-                box.Size = new Size(20, 20);
-                box.BackColor = color;
-                box.MouseClick += new MouseEventHandler(colorSwatchBox_Click);
+                colorSwatches[i].Location = new Point(index * 22, height * 22);
             }
         }
 
@@ -389,10 +513,17 @@ namespace TilemapEditor
         //Switch the primary and secondary colours
         private void SwitchColors()
         {
-            Color temp = PrimaryColor;
-            PrimaryColor = SecondaryColor;
-            SecondaryColor = temp;
+            //Swap colours (not using public property so logic is skipped)
+            Color temp = primaryColor;
+            primaryColor = secondaryColor;
+            secondaryColor = temp;
+
+            //Manually update display, skipping swatch creation
+            colorPrimaryBox.BackColor = primaryColor;
+            colorSecondaryBox.BackColor = secondaryColor;
         }
+
+        private void switchColoursButton_Click(object sender, EventArgs e) { SwitchColors(); }
 
         //Modifiers when alt is held
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
