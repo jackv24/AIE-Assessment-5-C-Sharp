@@ -16,6 +16,8 @@ namespace TilemapEditor
         private int borderWidth;
         [Browsable(true)]
 
+        public bool drawOver = false;
+
         public Color BorderColor
         {
             get { return borderColor; }
@@ -52,10 +54,15 @@ namespace TilemapEditor
             //Fixes issue where image seemed to be shifted half a pixel
             pe.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
+            //If basic outline, Draw rectangle UNDER image
+            if (!drawOver)
+                pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
+
             base.OnPaint(pe);
 
-            //Draw rectangle OVER image
-            pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
+            //If not basic outline, Draw rectangle OVER image
+            if(drawOver)
+                pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
         }
     }
 }

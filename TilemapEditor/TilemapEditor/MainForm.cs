@@ -14,7 +14,7 @@ namespace TilemapEditor
     public partial class MainForm : Form
     {
         //The tilemap image loaded
-        Image currentTilemap;
+        public Image currentTilemap = null;
         //The path from which it was loaded
         string lastFilePath = "";
 
@@ -75,8 +75,8 @@ namespace TilemapEditor
             tileHeightUpDown.Value = Properties.Settings.Default.TileHeight;
 
             //Set default colors
-            PrimaryColor = Color.White;
-            SecondaryColor = Color.Black;
+            PrimaryColor = Color.Black;
+            SecondaryColor = Color.White;
         }
 
         //Form events
@@ -129,26 +129,32 @@ namespace TilemapEditor
         private void CreateNew()
         {
             //Display a confirmation dialog
-            DialogResult result = MessageBox.Show(
-                "Are you sure you want to create a new tilemap?\nThis will erase the current tilemap.",
-                Application.ProductName,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            DialogResult result = DialogResult.Yes;
+
+            if (unsavedChanges)
+            {
+                result = MessageBox.Show(
+                    "Are you sure you want to create a new tilemap?\nThis will erase the current tilemap.",
+                    Application.ProductName,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+            }
 
             if (result == DialogResult.Yes)
             {
-                //Remove tilemap
-                currentTilemap = null;
-
                 //Remove pictureboxes
                 while (tilemapPanel.Controls.Count > 0)
                     tilemapPanel.Controls[0].Dispose();
 
                 tilePictureBox.Image = null;
+
+                CreateForm form = new CreateForm();
+                form.main = this;
+                form.Show();
             }
         }
 
-        private void OpenFile(bool showDialog)
+        public void OpenFile(bool showDialog)
         {
             if (showDialog)
             {
@@ -235,7 +241,8 @@ namespace TilemapEditor
 
         private void SaveFile(bool showDialog)
         {
-            if (showDialog && currentTilemap != null)
+            //Only show the dialog if showdialog is true and there is a tilemap to save (also save as if there is no lastFilePath)
+            if (showDialog && currentTilemap != null || lastFilePath == "")
             {
                 using (SaveFileDialog selectFile = new SaveFileDialog())
                 {
@@ -325,15 +332,21 @@ namespace TilemapEditor
             PixelPictureBox box = (PixelPictureBox)sender;
 
             if (box != selectedTile)
+            {
                 box.BorderColor = Properties.Settings.Default.TileHoverOutlineColor;
+                box.drawOver = true;
+            }
         }
 
         private void pictureBoxes_MouseLeave(object sender, EventArgs e)
         {
             PixelPictureBox box = (PixelPictureBox)sender;
 
-            if(box != selectedTile)
+            if (box != selectedTile)
+            {
                 box.BorderColor = Properties.Settings.Default.TileOutlineColor;
+                box.drawOver = false;
+            }
         }
 
         private void pictureBoxes_Click(object sender, EventArgs e)
@@ -348,10 +361,12 @@ namespace TilemapEditor
             if (lastSelectedTile != null)
             {
                 lastSelectedTile.BorderColor = Properties.Settings.Default.TileOutlineColor;
+                lastSelectedTile.drawOver = false;
             }
 
             //Set border color of selected tile
             selectedTile.BorderColor = Properties.Settings.Default.TileSelectedOutlineColor;
+            selectedTile.drawOver = true;
 
             //Display selected tile in editor
             tilePictureBox.Image = selectedTile.Image;
@@ -359,7 +374,7 @@ namespace TilemapEditor
 
         //Tile editor picturebox
         //Use property to access colour so displays can be updated
-        private Color primaryColor = Color.Black;
+        private Color primaryColor = Color.Empty;
         public Color PrimaryColor
         {
             get { return primaryColor; }
@@ -375,7 +390,7 @@ namespace TilemapEditor
         }
 
         //Use property to access colour so displays can be updated
-        private Color secondaryColor = Color.Black;
+        private Color secondaryColor = Color.Empty;
         public Color SecondaryColor
         {
             get { return secondaryColor; }

@@ -82,5 +82,29 @@ namespace TilemapEditor.Properties {
                 this["TileHoverOutlineColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int NewTilemapWidth {
+            get {
+                return ((int)(this["NewTilemapWidth"]));
+            }
+            set {
+                this["NewTilemapWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int NewTilemapHeight {
+            get {
+                return ((int)(this["NewTilemapHeight"]));
+            }
+            set {
+                this["NewTilemapHeight"] = value;
+            }
+        }
     }
 }

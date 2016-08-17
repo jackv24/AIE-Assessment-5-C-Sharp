@@ -62,11 +62,11 @@
             this.colorSwatchesPanel = new System.Windows.Forms.Panel();
             this.colorPrimaryBox = new System.Windows.Forms.PictureBox();
             this.colorSecondaryBox = new System.Windows.Forms.PictureBox();
+            this.switchColoursButton = new System.Windows.Forms.Button();
             this.colourBox = new System.Windows.Forms.GroupBox();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
             this.toolStripToolStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.switchColoursButton = new System.Windows.Forms.Button();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -202,9 +202,19 @@
             // tileHeightUpDown
             // 
             this.tileHeightUpDown.Location = new System.Drawing.Point(153, 42);
+            this.tileHeightUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.tileHeightUpDown.Name = "tileHeightUpDown";
             this.tileHeightUpDown.Size = new System.Drawing.Size(40, 20);
             this.tileHeightUpDown.TabIndex = 7;
+            this.tileHeightUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // tileHeightLabel
             // 
@@ -219,9 +229,19 @@
             // tileWidthUpDown
             // 
             this.tileWidthUpDown.Location = new System.Drawing.Point(153, 16);
+            this.tileWidthUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.tileWidthUpDown.Name = "tileWidthUpDown";
             this.tileWidthUpDown.Size = new System.Drawing.Size(40, 20);
             this.tileWidthUpDown.TabIndex = 5;
+            this.tileWidthUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // tileWidthLabel
             // 
@@ -416,6 +436,17 @@
             this.helpTooltip.SetToolTip(this.colorSecondaryBox, "Secondary color (right click)");
             this.colorSecondaryBox.Click += new System.EventHandler(this.colorSecondaryBox_Click);
             // 
+            // switchColoursButton
+            // 
+            this.switchColoursButton.Location = new System.Drawing.Point(50, 60);
+            this.switchColoursButton.Name = "switchColoursButton";
+            this.switchColoursButton.Size = new System.Drawing.Size(18, 18);
+            this.switchColoursButton.TabIndex = 3;
+            this.switchColoursButton.Text = "<";
+            this.helpTooltip.SetToolTip(this.switchColoursButton, "Switch colours (X)");
+            this.switchColoursButton.UseVisualStyleBackColor = true;
+            this.switchColoursButton.Click += new System.EventHandler(this.switchColoursButton_Click);
+            // 
             // colourBox
             // 
             this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -451,17 +482,6 @@
             this.statusStrip.Size = new System.Drawing.Size(984, 22);
             this.statusStrip.TabIndex = 7;
             this.statusStrip.Text = "statusStrip1";
-            // 
-            // switchColoursButton
-            // 
-            this.switchColoursButton.Location = new System.Drawing.Point(50, 60);
-            this.switchColoursButton.Name = "switchColoursButton";
-            this.switchColoursButton.Size = new System.Drawing.Size(18, 18);
-            this.switchColoursButton.TabIndex = 3;
-            this.switchColoursButton.Text = "<";
-            this.helpTooltip.SetToolTip(this.switchColoursButton, "Switch colours (X)");
-            this.switchColoursButton.UseVisualStyleBackColor = true;
-            this.switchColoursButton.Click += new System.EventHandler(this.switchColoursButton_Click);
             // 
             // tilePictureBox
             // 
