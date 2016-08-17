@@ -12,9 +12,36 @@ namespace TilemapEditor
 {
     public partial class PixelPictureBox : PictureBox
     {
+        private Color borderColor;
+        private int borderWidth;
+        [Browsable(true)]
+
+        public Color BorderColor
+        {
+            get { return borderColor; }
+            set
+            {
+                borderColor = value;
+                Invalidate();
+            }
+        }
+        [Browsable(true)]
+        public int BorderWidth
+        {
+            get { return borderWidth; }
+            set
+            {
+                borderWidth = value;
+                Invalidate();
+            }
+        }
+
         public PixelPictureBox()
         {
             InitializeComponent();
+
+            borderColor = Color.Empty;
+            borderWidth = 1;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -26,6 +53,9 @@ namespace TilemapEditor
             pe.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
             base.OnPaint(pe);
+
+            //Draw rectangle OVER image
+            pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
         }
     }
 }

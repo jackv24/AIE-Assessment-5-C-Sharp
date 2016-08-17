@@ -54,12 +54,18 @@
             this.tilemapPanel = new System.Windows.Forms.Panel();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
-            this.helpTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.colourBox = new System.Windows.Forms.GroupBox();
             this.toolColorPickerButton = new System.Windows.Forms.Button();
             this.toolFillButton = new System.Windows.Forms.Button();
             this.toolEraserButton = new System.Windows.Forms.Button();
             this.toolPencilButton = new System.Windows.Forms.Button();
+            this.helpTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.colorSwatchesPanel = new System.Windows.Forms.Panel();
+            this.colorPrimaryBox = new System.Windows.Forms.PictureBox();
+            this.colorSecondaryBox = new System.Windows.Forms.PictureBox();
+            this.colourBox = new System.Windows.Forms.GroupBox();
+            this.colorPicker = new System.Windows.Forms.ColorDialog();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripToolStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -70,6 +76,10 @@
             this.tilemapBox.SuspendLayout();
             this.tileEditorBox.SuspendLayout();
             this.toolsBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).BeginInit();
+            this.colourBox.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -181,7 +191,7 @@
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
             this.refreshButton.TabIndex = 8;
-            this.refreshButton.Text = "Refresh";
+            this.refreshButton.Text = "Reload";
             this.helpTooltip.SetToolTip(this.refreshButton, "Updates the tilemap with the new values");
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
@@ -324,16 +334,6 @@
             this.toolsBox.TabStop = false;
             this.toolsBox.Text = "Tools";
             // 
-            // colourBox
-            // 
-            this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.colourBox.Location = new System.Drawing.Point(899, 152);
-            this.colourBox.Name = "colourBox";
-            this.colourBox.Size = new System.Drawing.Size(79, 283);
-            this.colourBox.TabIndex = 6;
-            this.colourBox.TabStop = false;
-            this.colourBox.Text = "Colours";
-            // 
             // toolColorPickerButton
             // 
             this.toolColorPickerButton.Image = global::TilemapEditor.Properties.Resources.eyedropper;
@@ -341,8 +341,9 @@
             this.toolColorPickerButton.Name = "toolColorPickerButton";
             this.toolColorPickerButton.Size = new System.Drawing.Size(32, 32);
             this.toolColorPickerButton.TabIndex = 3;
-            this.helpTooltip.SetToolTip(this.toolColorPickerButton, "Samples a pixel colour");
+            this.helpTooltip.SetToolTip(this.toolColorPickerButton, "Eye dropper (ALT + Left/Right)");
             this.toolColorPickerButton.UseVisualStyleBackColor = true;
+            this.toolColorPickerButton.Click += new System.EventHandler(this.toolColorPickerButton_Click);
             // 
             // toolFillButton
             // 
@@ -353,6 +354,7 @@
             this.toolFillButton.TabIndex = 2;
             this.helpTooltip.SetToolTip(this.toolFillButton, "Fill a large area of pixels");
             this.toolFillButton.UseVisualStyleBackColor = true;
+            this.toolFillButton.Click += new System.EventHandler(this.toolFillButton_Click);
             // 
             // toolEraserButton
             // 
@@ -361,8 +363,9 @@
             this.toolEraserButton.Name = "toolEraserButton";
             this.toolEraserButton.Size = new System.Drawing.Size(32, 32);
             this.toolEraserButton.TabIndex = 1;
-            this.helpTooltip.SetToolTip(this.toolEraserButton, "Erase pixels");
+            this.helpTooltip.SetToolTip(this.toolEraserButton, "Eraser");
             this.toolEraserButton.UseVisualStyleBackColor = true;
+            this.toolEraserButton.Click += new System.EventHandler(this.toolEraserButton_Click);
             // 
             // toolPencilButton
             // 
@@ -372,24 +375,95 @@
             this.toolPencilButton.Name = "toolPencilButton";
             this.toolPencilButton.Size = new System.Drawing.Size(32, 32);
             this.toolPencilButton.TabIndex = 0;
-            this.helpTooltip.SetToolTip(this.toolPencilButton, "Edit individual pixels");
+            this.helpTooltip.SetToolTip(this.toolPencilButton, "Pencil (left/right click)");
             this.toolPencilButton.UseVisualStyleBackColor = true;
+            this.toolPencilButton.Click += new System.EventHandler(this.toolPencilButton_Click);
+            // 
+            // colorSwatchesPanel
+            // 
+            this.colorSwatchesPanel.Location = new System.Drawing.Point(7, 82);
+            this.colorSwatchesPanel.Name = "colorSwatchesPanel";
+            this.colorSwatchesPanel.Size = new System.Drawing.Size(66, 195);
+            this.colorSwatchesPanel.TabIndex = 1;
+            this.helpTooltip.SetToolTip(this.colorSwatchesPanel, "Click to use swatch");
+            // 
+            // colorPrimaryBox
+            // 
+            this.colorPrimaryBox.BackColor = System.Drawing.Color.Black;
+            this.colorPrimaryBox.Location = new System.Drawing.Point(7, 36);
+            this.colorPrimaryBox.Name = "colorPrimaryBox";
+            this.colorPrimaryBox.Size = new System.Drawing.Size(40, 40);
+            this.colorPrimaryBox.TabIndex = 0;
+            this.colorPrimaryBox.TabStop = false;
+            this.helpTooltip.SetToolTip(this.colorPrimaryBox, "Primary color (left click)");
+            this.colorPrimaryBox.Click += new System.EventHandler(this.colorPrimaryBox_Click);
+            // 
+            // colorSecondaryBox
+            // 
+            this.colorSecondaryBox.BackColor = System.Drawing.Color.DimGray;
+            this.colorSecondaryBox.Location = new System.Drawing.Point(33, 19);
+            this.colorSecondaryBox.Name = "colorSecondaryBox";
+            this.colorSecondaryBox.Size = new System.Drawing.Size(40, 40);
+            this.colorSecondaryBox.TabIndex = 2;
+            this.colorSecondaryBox.TabStop = false;
+            this.helpTooltip.SetToolTip(this.colorSecondaryBox, "Secondary color (right click)");
+            this.colorSecondaryBox.Click += new System.EventHandler(this.colorSecondaryBox_Click);
+            // 
+            // colourBox
+            // 
+            this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.colourBox.Controls.Add(this.colorPrimaryBox);
+            this.colourBox.Controls.Add(this.colorSecondaryBox);
+            this.colourBox.Controls.Add(this.colorSwatchesPanel);
+            this.colourBox.Location = new System.Drawing.Point(899, 152);
+            this.colourBox.Name = "colourBox";
+            this.colourBox.Size = new System.Drawing.Size(79, 283);
+            this.colourBox.TabIndex = 6;
+            this.colourBox.TabStop = false;
+            this.colourBox.Text = "Colours";
+            // 
+            // colorPicker
+            // 
+            this.colorPicker.AnyColor = true;
+            this.colorPicker.SolidColorOnly = true;
+            // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripToolStatus});
+            this.statusStrip.Location = new System.Drawing.Point(0, 440);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(984, 22);
+            this.statusStrip.TabIndex = 7;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripToolStatus
+            // 
+            this.toolStripToolStatus.Name = "toolStripToolStatus";
+            this.toolStripToolStatus.Size = new System.Drawing.Size(116, 17);
+            this.toolStripToolStatus.Text = "Selected Tool: Pencil";
             // 
             // tilePictureBox
             // 
             this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.tilePictureBox.BorderColor = System.Drawing.Color.Empty;
+            this.tilePictureBox.BorderWidth = 1;
             this.tilePictureBox.Location = new System.Drawing.Point(3, 16);
             this.tilePictureBox.Name = "tilePictureBox";
             this.tilePictureBox.Size = new System.Drawing.Size(389, 391);
             this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.tilePictureBox.TabIndex = 6;
             this.tilePictureBox.TabStop = false;
+            this.tilePictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tilePictureBox_MouseDown);
+            this.tilePictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tilePictureBox_MouseMove);
+            this.tilePictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tilePictureBox_MouseUp);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 447);
+            this.ClientSize = new System.Drawing.Size(984, 462);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.colourBox);
             this.Controls.Add(this.toolsBox);
             this.Controls.Add(this.tileEditorBox);
@@ -397,11 +471,14 @@
             this.Controls.Add(this.fileOptionsBox);
             this.Controls.Add(this.tilemapOptionsBox);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(800, 480);
+            this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "MainForm";
             this.Text = "Tilemap Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tilemapOptionsBox.ResumeLayout(false);
@@ -413,6 +490,11 @@
             this.tilemapBox.ResumeLayout(false);
             this.tileEditorBox.ResumeLayout(false);
             this.toolsBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).EndInit();
+            this.colourBox.ResumeLayout(false);
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -453,6 +535,12 @@
         private System.Windows.Forms.Label zoomLabel;
         private System.Windows.Forms.GroupBox colourBox;
         private System.Windows.Forms.Button toolColorPickerButton;
+        private System.Windows.Forms.PictureBox colorPrimaryBox;
+        private System.Windows.Forms.ColorDialog colorPicker;
+        private System.Windows.Forms.Panel colorSwatchesPanel;
+        private System.Windows.Forms.PictureBox colorSecondaryBox;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripToolStatus;
     }
 }
 

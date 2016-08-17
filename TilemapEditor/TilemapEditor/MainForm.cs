@@ -20,6 +20,44 @@ namespace TilemapEditor
         Bitmap[,] tileBitmaps;
         PixelPictureBox[,] pictureBoxes;
 
+        public enum Tools
+        {
+            Pencil,
+            Eraser,
+            Fill,
+            EyeDropper
+        }
+        private Tools selectedTool = Tools.Pencil;
+        public Tools SelectedTool
+        {
+            get { return selectedTool; }
+            set
+            {
+                selectedTool = value;
+
+                string tool = "None";
+
+                switch(selectedTool)
+                {
+                    case Tools.Pencil:
+                        tool = "Pencil";
+                        break;
+                    case Tools.Eraser:
+                        tool = "Eraser";
+                        break;
+                    case Tools.Fill:
+                        tool = "Fill Bucket";
+                        break;
+                    case Tools.EyeDropper:
+                        tool = "Eye Dropper";
+                        break;
+                }
+
+                toolStripToolStatus.Text = "Selected Tool: " + tool;
+            }
+
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -27,6 +65,10 @@ namespace TilemapEditor
             //Load default values from settings
             tileWidthUpDown.Value = Properties.Settings.Default.TileWidth;
             tileHeightUpDown.Value = Properties.Settings.Default.TileHeight;
+
+            //Set default colors
+            PrimaryColor = Color.White;
+            SecondaryColor = Color.Black;
         }
 
         //Form events
@@ -82,6 +124,8 @@ namespace TilemapEditor
                 //Remove pictureboxes
                 while (tilemapPanel.Controls.Count > 0)
                     tilemapPanel.Controls[0].Dispose();
+
+                tilePictureBox.Image = null;
             }
         }
 
@@ -121,6 +165,8 @@ namespace TilemapEditor
                 while (tilemapPanel.Controls.Count > 0)
                     tilemapPanel.Controls[0].Dispose();
 
+                tilePictureBox.Image = null;
+
                 //Calculate rows and columns
                 int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
                 int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
@@ -149,9 +195,9 @@ namespace TilemapEditor
                         box.Size = new Size(tileWidth * zoomAmount, tileHeight * zoomAmount);
                         box.Image = bmp;
                         box.SizeMode = PictureBoxSizeMode.StretchImage;
+                        box.BorderColor = Properties.Settings.Default.TileOutlineColor;
 
                         //Set picturebox event handlers
-                        box.Paint += new PaintEventHandler(pictureBoxes_Paint);
                         box.MouseEnter += new EventHandler(pictureBoxes_MouseEnter);
                         box.MouseLeave += new EventHandler(pictureBoxes_MouseLeave);
                         box.Click += new EventHandler(pictureBoxes_Click);
@@ -165,35 +211,20 @@ namespace TilemapEditor
         }
 
         //Tileset Picture box event handlers
-        private void pictureBoxes_Paint(object sender, PaintEventArgs e)
-        {
-            PixelPictureBox box = (PixelPictureBox)sender;
-
-            //Set default color
-            if (box.Tag == null)
-                box.Tag = Properties.Settings.Default.TileOutlineColor;
-
-            if (box == selectedTile)
-                box.Tag = Properties.Settings.Default.TileSelectedOutlineColor;
-
-            //Draw border that is the color of the tag
-            ControlPaint.DrawBorder(e.Graphics, box.ClientRectangle, (Color)box.Tag, ButtonBorderStyle.Solid);
-        }
-
         private void pictureBoxes_MouseEnter(object sender, EventArgs e)
         {
             PixelPictureBox box = (PixelPictureBox)sender;
 
-            box.Tag = Properties.Settings.Default.TileHoverOutlineColor;
-            box.Refresh();
+            if (box != selectedTile)
+                box.BorderColor = Properties.Settings.Default.TileHoverOutlineColor;
         }
 
         private void pictureBoxes_MouseLeave(object sender, EventArgs e)
         {
             PixelPictureBox box = (PixelPictureBox)sender;
 
-            box.Tag = Properties.Settings.Default.TileOutlineColor;
-            box.Refresh();
+            if(box != selectedTile)
+                box.BorderColor = Properties.Settings.Default.TileOutlineColor;
         }
 
         private void pictureBoxes_Click(object sender, EventArgs e)
@@ -204,15 +235,184 @@ namespace TilemapEditor
             lastSelectedTile = selectedTile;
             selectedTile = box;
 
+            //Deselect last tile
             if (lastSelectedTile != null)
             {
-                //Clear last tile
-                lastSelectedTile.Tag = Properties.Settings.Default.TileOutlineColor;
-                lastSelectedTile.Refresh();
+                lastSelectedTile.BorderColor = Properties.Settings.Default.TileOutlineColor;
             }
-            box.Refresh();
 
+            //Set border color of selected tile
+            selectedTile.BorderColor = Properties.Settings.Default.TileSelectedOutlineColor;
+
+            //Display selected tile in editor
             tilePictureBox.Image = selectedTile.Image;
         }
+
+        //Tile editor picturebox
+        private Color primaryColor = Color.Black;
+        public Color PrimaryColor
+        {
+            get { return primaryColor; }
+            set
+            {
+                primaryColor = value;
+                colorPrimaryBox.BackColor = primaryColor;
+                AddSwatch(primaryColor);
+            }
+        }
+
+        private Color secondaryColor = Color.Black;
+        public Color SecondaryColor
+        {
+            get { return secondaryColor; }
+            set
+            {
+                secondaryColor = value;
+                colorSecondaryBox.BackColor = secondaryColor;
+                AddSwatch(secondaryColor);
+            }
+        }
+
+        List<Color> colorSwatches = new List<Color>();
+
+        bool hasClicked = false;
+
+        private void tilePictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            hasClicked = true;
+            tilePictureBox_MouseMove(sender, e);
+        }
+
+        private void tilePictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (hasClicked)
+            {
+                PixelPictureBox box = (PixelPictureBox)sender;
+
+                if (box.Image != null)
+                {
+                    //If left or right mouse button was clicked
+                    if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
+                    {
+                        Bitmap bmp = new Bitmap(box.Image);
+                        float pixelRatio = (float)bmp.Width / box.Width;
+
+                        int x = (int)Math.Ceiling(e.X * pixelRatio) - 1;
+                        int y = (int)Math.Ceiling(e.Y * pixelRatio) - 1;
+
+                        //If click was made inside picture box
+                        if (x < bmp.Width && x >= 0 && y < bmp.Height && y >= 0)
+                        {
+                            //Get desired color based on left or right mouse click
+                            Color color = Color.White;
+                            if (e.Button == MouseButtons.Left)
+                                color = PrimaryColor;
+                            else if (e.Button == MouseButtons.Right)
+                                color = SecondaryColor;
+
+                            if (selectedTool == Tools.EyeDropper)
+                            {
+                                //Checks are needed for eyedropper as it modifies the colours
+                                if (e.Button == MouseButtons.Left)
+                                    PrimaryColor = bmp.GetPixel(x, y);
+                                else if (e.Button == MouseButtons.Right)
+                                    SecondaryColor = bmp.GetPixel(x, y);
+                            }
+                            else if(selectedTool == Tools.Pencil)
+                            {
+                                //Color pixel
+                                bmp.SetPixel(x, y, color);
+
+                                //Update editor and tilemap images to the new bitmap
+                                box.Image = bmp;
+                                selectedTile.Image = bmp;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void tilePictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            hasClicked = false;
+        }
+
+        //Color picking
+        private void colorPrimaryBox_Click(object sender, EventArgs e)
+        {
+            if (colorPicker.ShowDialog() == DialogResult.OK)
+            {
+                PrimaryColor = colorPicker.Color;
+            }
+        }
+
+        private void colorSecondaryBox_Click(object sender, EventArgs e)
+        {
+            if (colorPicker.ShowDialog() == DialogResult.OK)
+            {
+                SecondaryColor = colorPicker.Color;
+            }
+        }
+
+        private void AddSwatch(Color color)
+        {
+            if (!colorSwatches.Contains(color))
+            {
+                colorSwatches.Add(color);
+                int index = colorSwatches.Count - 1;
+
+                int height = (int)Math.Floor((float)index / 3);
+                for (int i = height; i > 0; i--)
+                {
+                    index -= 3;
+                }
+
+                //Create new picturebox as child of tilemapPanel
+                PictureBox box = new PictureBox();
+                colorSwatchesPanel.Controls.Add(box);
+                box.Location = new Point(index * 22, height * 22);
+                box.Size = new Size(20, 20);
+                box.BackColor = color;
+                box.MouseClick += new MouseEventHandler(colorSwatchBox_Click);
+            }
+        }
+
+        private void colorSwatchBox_Click(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+                PrimaryColor = ((PictureBox)sender).BackColor;
+            else if (e.Button == MouseButtons.Right)
+                SecondaryColor = ((PictureBox)sender).BackColor;
+        }
+
+        //Switch the primary and secondary colours
+        private void SwitchColors()
+        {
+            Color temp = PrimaryColor;
+            PrimaryColor = SecondaryColor;
+            SecondaryColor = temp;
+        }
+
+        //Modifiers when alt is held
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Alt)
+                SelectedTool = Tools.EyeDropper;
+
+            if (e.KeyCode == Keys.X)
+                SwitchColors();
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            SelectedTool = Tools.Pencil;
+        }
+
+        //Tool buttons
+        private void toolPencilButton_Click(object sender, EventArgs e) { SelectedTool = Tools.Pencil; }
+        private void toolEraserButton_Click(object sender, EventArgs e) { SelectedTool = Tools.Eraser; }
+        private void toolFillButton_Click(object sender, EventArgs e) { SelectedTool = Tools.Fill; }
+        private void toolColorPickerButton_Click(object sender, EventArgs e) { SelectedTool = Tools.EyeDropper; }
     }
 }
