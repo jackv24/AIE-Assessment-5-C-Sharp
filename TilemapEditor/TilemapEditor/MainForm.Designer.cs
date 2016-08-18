@@ -325,7 +325,7 @@
             this.tilemapBox.Location = new System.Drawing.Point(0, 0);
             this.tilemapBox.Name = "tilemapBox";
             this.tilemapBox.Padding = new System.Windows.Forms.Padding(5);
-            this.tilemapBox.Size = new System.Drawing.Size(282, 500);
+            this.tilemapBox.Size = new System.Drawing.Size(400, 500);
             this.tilemapBox.TabIndex = 3;
             this.tilemapBox.TabStop = false;
             this.tilemapBox.Text = "Tilemap";
@@ -337,7 +337,7 @@
             this.tilemapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tilemapPanel.Location = new System.Drawing.Point(5, 18);
             this.tilemapPanel.Name = "tilemapPanel";
-            this.tilemapPanel.Size = new System.Drawing.Size(272, 477);
+            this.tilemapPanel.Size = new System.Drawing.Size(390, 477);
             this.tilemapPanel.TabIndex = 0;
             // 
             // toolsBox
@@ -497,7 +497,7 @@
             // 
             this.tileSplitContainer.Panel2.Controls.Add(this.tileEditorBox);
             this.tileSplitContainer.Size = new System.Drawing.Size(674, 500);
-            this.tileSplitContainer.SplitterDistance = 282;
+            this.tileSplitContainer.SplitterDistance = 400;
             this.tileSplitContainer.TabIndex = 8;
             // 
             // tileEditorBox
@@ -507,7 +507,7 @@
             this.tileEditorBox.Location = new System.Drawing.Point(0, 0);
             this.tileEditorBox.Name = "tileEditorBox";
             this.tileEditorBox.Padding = new System.Windows.Forms.Padding(5);
-            this.tileEditorBox.Size = new System.Drawing.Size(388, 500);
+            this.tileEditorBox.Size = new System.Drawing.Size(270, 500);
             this.tileEditorBox.TabIndex = 4;
             this.tileEditorBox.TabStop = false;
             this.tileEditorBox.Text = "Tile Editor";
@@ -539,7 +539,7 @@
             this.tilePictureBox.KeepAspect = true;
             this.tilePictureBox.Location = new System.Drawing.Point(5, 18);
             this.tilePictureBox.Name = "tilePictureBox";
-            this.tilePictureBox.Size = new System.Drawing.Size(378, 378);
+            this.tilePictureBox.Size = new System.Drawing.Size(260, 260);
             this.tilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.tilePictureBox.TabIndex = 6;
             this.tilePictureBox.TabStop = false;
@@ -562,7 +562,7 @@
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(800, 500);
+            this.MinimumSize = new System.Drawing.Size(600, 350);
             this.Name = "MainForm";
             this.Text = "Tilemap Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
