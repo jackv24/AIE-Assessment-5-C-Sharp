@@ -87,8 +87,12 @@ namespace TilemapEditor
         private void box_Resize(object sender, EventArgs e)
         {
             //Resize picturebox vertically to keep the aspect ratio of the image
-            if(KeepAspect && Image != null)
-                Height = Width * (Image.Height / Image.Width);
+            if (KeepAspect && Image != null)
+            {
+                float ratio = (float)Image.Height / Image.Width;
+
+                Height = (int)(Width * ratio);
+            }
         }
     }
 }

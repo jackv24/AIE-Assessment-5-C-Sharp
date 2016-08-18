@@ -71,12 +71,31 @@ namespace TilemapEditor
             InitializeComponent();
 
             //Load default values from settings
-            tileWidthUpDown.Value = Properties.Settings.Default.TileWidth;
-            tileHeightUpDown.Value = Properties.Settings.Default.TileHeight;
+            LoadPrefs();
 
             //Set default colors
             PrimaryColor = Color.Black;
             SecondaryColor = Color.White;
+        }
+
+        public void LoadPrefs()
+        {
+            tileWidthUpDown.Value = Properties.Settings.Default.TileWidth;
+            tileHeightUpDown.Value = Properties.Settings.Default.TileHeight;
+
+            tilePictureBox.BackColor = Properties.Settings.Default.BackgroundColor;
+            tilemapPanel.BackColor = Properties.Settings.Default.BackgroundColor;
+
+            //Reset existing tile outline colours
+            if (pictureBoxes != null)
+                for (int i = 0; i < pictureBoxes.GetLength(0); i++)
+                    for (int j = 0; j < pictureBoxes.GetLength(1); j++)
+                    {
+                        if(pictureBoxes[i, j] == selectedTile)
+                            pictureBoxes[i, j].BorderColor = Properties.Settings.Default.TileSelectedOutlineColor;
+                        else
+                            pictureBoxes[i, j].BorderColor = Properties.Settings.Default.TileOutlineColor;
+                    }
         }
 
         //Form events
@@ -95,6 +114,12 @@ namespace TilemapEditor
                 if (result == DialogResult.No)
                     e.Cancel = true;
             }
+
+            //Save settings
+            Properties.Settings.Default.TileWidth = (int)tileWidthUpDown.Value;
+            Properties.Settings.Default.TileHeight = (int)tileHeightUpDown.Value;
+
+            Properties.Settings.Default.Save();
         }
 
         //Menu strip events
@@ -124,6 +149,14 @@ namespace TilemapEditor
 
         private void refreshButton_Click(object sender, EventArgs e) { OpenFile(false); }
 
+        //Edit menu
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Preferences prefs = new Preferences();
+            prefs.main = this;
+            prefs.ShowDialog();
+        }
+
         //Methods for multiple controls
         //Resets all values
         private void CreateNew()
@@ -147,15 +180,19 @@ namespace TilemapEditor
                     tilemapPanel.Controls[0].Dispose();
 
                 tilePictureBox.Image = null;
+                lastFilePath = "";
 
                 CreateForm form = new CreateForm();
                 form.main = this;
-                form.Show();
+                form.ShowDialog();
             }
         }
 
         public void OpenFile(bool showDialog)
         {
+            //If a new file is opened, it has not been changed yet
+            unsavedChanges = false;
+
             if (showDialog)
             {
                 using (OpenFileDialog selectFile = new OpenFileDialog())
@@ -451,15 +488,20 @@ namespace TilemapEditor
                                 else if (e.Button == MouseButtons.Right)
                                     SecondaryColor = bmp.GetPixel(x, y);
                             }
-                            else if(selectedTool == Tools.Pencil)
+                            else if (selectedTool == Tools.Pencil)
                             {
                                 //Color pixel
                                 bmp.SetPixel(x, y, color);
-
-                                //Update editor and tilemap images to the new bitmap
-                                box.Image = bmp;
-                                selectedTile.Image = bmp;
                             }
+                            else if (selectedTool == Tools.Eraser)
+                            {
+                                //Erase pixel
+                                bmp.SetPixel(x, y, Color.Empty);
+                            }
+
+                            //Update editor and tilemap images to the new bitmap
+                            box.Image = bmp;
+                            selectedTile.Image = bmp;
                         }
 
                         //Changes were made
@@ -477,6 +519,8 @@ namespace TilemapEditor
         //Color picking
         private void colorPrimaryBox_Click(object sender, EventArgs e)
         {
+            colorPicker.Color = primaryColor;
+
             if (colorPicker.ShowDialog() == DialogResult.OK)
             {
                 PrimaryColor = colorPicker.Color;
@@ -485,6 +529,8 @@ namespace TilemapEditor
 
         private void colorSecondaryBox_Click(object sender, EventArgs e)
         {
+            colorPicker.Color = secondaryColor;
+
             if (colorPicker.ShowDialog() == DialogResult.OK)
             {
                 SecondaryColor = colorPicker.Color;

@@ -68,6 +68,8 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.tileSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -92,7 +94,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(984, 24);
@@ -408,6 +411,7 @@
             // colorPrimaryBox
             // 
             this.colorPrimaryBox.BackColor = System.Drawing.Color.Black;
+            this.colorPrimaryBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.colorPrimaryBox.Location = new System.Drawing.Point(7, 36);
             this.colorPrimaryBox.Name = "colorPrimaryBox";
             this.colorPrimaryBox.Size = new System.Drawing.Size(40, 40);
@@ -419,6 +423,7 @@
             // colorSecondaryBox
             // 
             this.colorSecondaryBox.BackColor = System.Drawing.Color.DimGray;
+            this.colorSecondaryBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.colorSecondaryBox.Location = new System.Drawing.Point(33, 19);
             this.colorSecondaryBox.Name = "colorSecondaryBox";
             this.colorSecondaryBox.Size = new System.Drawing.Size(40, 40);
@@ -456,10 +461,12 @@
             // colorPicker
             // 
             this.colorPicker.AnyColor = true;
+            this.colorPicker.FullOpen = true;
             this.colorPicker.SolidColorOnly = true;
             // 
             // toolStripToolStatus
             // 
+            this.toolStripToolStatus.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripToolStatus.Name = "toolStripToolStatus";
             this.toolStripToolStatus.Size = new System.Drawing.Size(115, 17);
             this.toolStripToolStatus.Text = "Selected Tool: Pencil";
@@ -505,6 +512,21 @@
             this.tileEditorBox.TabStop = false;
             this.tileEditorBox.Text = "Tile Editor";
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // preferencesToolStripMenuItem
+            // 
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.preferencesToolStripMenuItem.Text = "Preferences";
+            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
+            // 
             // tilePictureBox
             // 
             this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
@@ -513,6 +535,7 @@
             this.tilePictureBox.BorderWidth = 1;
             this.tilePictureBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tilePictureBox.Image = null;
             this.tilePictureBox.KeepAspect = true;
             this.tilePictureBox.Location = new System.Drawing.Point(5, 18);
             this.tilePictureBox.Name = "tilePictureBox";
@@ -528,6 +551,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(984, 561);
             this.Controls.Add(this.tileSplitContainer);
             this.Controls.Add(this.statusStrip);
@@ -612,6 +636,8 @@
         private System.Windows.Forms.Button switchColoursButton;
         private System.Windows.Forms.SplitContainer tileSplitContainer;
         private System.Windows.Forms.GroupBox tileEditorBox;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
     }
 }
 
