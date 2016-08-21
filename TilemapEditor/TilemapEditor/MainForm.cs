@@ -45,19 +45,28 @@ namespace TilemapEditor
 
                 string tool = "None";
 
+                toolPencilButton.Enabled = true;
+                toolEraserButton.Enabled = true;
+                toolFillButton.Enabled = true;
+                toolColorPickerButton.Enabled = true;
+
                 switch(selectedTool)
                 {
                     case Tools.Pencil:
                         tool = "Pencil";
+                        toolPencilButton.Enabled = false;
                         break;
                     case Tools.Eraser:
                         tool = "Eraser";
+                        toolEraserButton.Enabled = false;
                         break;
                     case Tools.Fill:
                         tool = "Fill Bucket";
+                        toolFillButton.Enabled = false;
                         break;
                     case Tools.EyeDropper:
                         tool = "Eye Dropper";
+                        toolColorPickerButton.Enabled = false;
                         break;
                 }
 
@@ -76,6 +85,8 @@ namespace TilemapEditor
             //Set default colors
             PrimaryColor = Color.Black;
             SecondaryColor = Color.White;
+
+            SelectedTool = Tools.Pencil;
         }
 
         public void LoadPrefs()
@@ -417,8 +428,7 @@ namespace TilemapEditor
             get { return primaryColor; }
             set
             {
-                //Only add swatch if colour has changed
-                if(primaryColor != value)
+                if(primaryColor != value && primaryColor != Color.Empty)
                     AddSwatch(primaryColor);
 
                 primaryColor = value;
@@ -433,8 +443,7 @@ namespace TilemapEditor
             get { return secondaryColor; }
             set
             {
-                //Only add swatch if colour has changed
-                if (secondaryColor != value)
+                if(secondaryColor != value && secondaryColor != Color.Empty)
                     AddSwatch(secondaryColor);
 
                 secondaryColor = value;
@@ -498,6 +507,14 @@ namespace TilemapEditor
                                 //Erase pixel
                                 bmp.SetPixel(x, y, Color.Empty);
                             }
+                            else if (selectedTool == Tools.Fill)
+                            {
+                                using (Graphics g = Graphics.FromImage(bmp))
+                                {
+                                    //Fill the tile with a solid color
+                                    g.FillRectangle(new SolidBrush(color), 0, 0, bmp.Width, bmp.Height);
+                                }
+                            }
 
                             //Update editor and tilemap images to the new bitmap
                             box.Image = bmp;
@@ -545,6 +562,8 @@ namespace TilemapEditor
             colorSwatchesPanel.Controls.Add(box);
             box.Size = new Size(20, 20);
             box.BackColor = color;
+            box.BorderStyle = BorderStyle.FixedSingle;
+            helpTooltip.SetToolTip(box, "Click to use swatch");
             box.MouseClick += new MouseEventHandler(colorSwatchBox_Click);
 
             //Reposition swatches

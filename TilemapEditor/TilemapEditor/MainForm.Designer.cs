@@ -37,6 +37,8 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tilemapOptionsBox = new System.Windows.Forms.GroupBox();
             this.zoomLabel = new System.Windows.Forms.Label();
             this.zoomTrackBar = new System.Windows.Forms.TrackBar();
@@ -68,8 +70,6 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.tileSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -160,6 +160,21 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.preferencesToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // preferencesToolStripMenuItem
+            // 
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.preferencesToolStripMenuItem.Text = "Preferences";
+            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
+            // 
             // tilemapOptionsBox
             // 
             this.tilemapOptionsBox.Controls.Add(this.zoomLabel);
@@ -193,7 +208,7 @@
             this.zoomTrackBar.Minimum = 1;
             this.zoomTrackBar.Name = "zoomTrackBar";
             this.zoomTrackBar.Size = new System.Drawing.Size(89, 45);
-            this.zoomTrackBar.TabIndex = 9;
+            this.zoomTrackBar.TabIndex = 8;
             this.zoomTrackBar.Value = 2;
             // 
             // refreshButton
@@ -201,7 +216,7 @@
             this.refreshButton.Location = new System.Drawing.Point(119, 119);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
-            this.refreshButton.TabIndex = 8;
+            this.refreshButton.TabIndex = 9;
             this.refreshButton.Text = "Reload";
             this.helpTooltip.SetToolTip(this.refreshButton, "Updates the tilemap with the new values");
             this.refreshButton.UseVisualStyleBackColor = true;
@@ -361,6 +376,7 @@
             this.toolColorPickerButton.Name = "toolColorPickerButton";
             this.toolColorPickerButton.Size = new System.Drawing.Size(32, 32);
             this.toolColorPickerButton.TabIndex = 3;
+            this.toolColorPickerButton.TabStop = false;
             this.helpTooltip.SetToolTip(this.toolColorPickerButton, "Eye dropper (ALT + Left/Right)");
             this.toolColorPickerButton.UseVisualStyleBackColor = true;
             this.toolColorPickerButton.Click += new System.EventHandler(this.toolColorPickerButton_Click);
@@ -372,7 +388,8 @@
             this.toolFillButton.Name = "toolFillButton";
             this.toolFillButton.Size = new System.Drawing.Size(32, 32);
             this.toolFillButton.TabIndex = 2;
-            this.helpTooltip.SetToolTip(this.toolFillButton, "Fill a large area of pixels");
+            this.toolFillButton.TabStop = false;
+            this.helpTooltip.SetToolTip(this.toolFillButton, "Fill the tile with a solid colour");
             this.toolFillButton.UseVisualStyleBackColor = true;
             this.toolFillButton.Click += new System.EventHandler(this.toolFillButton_Click);
             // 
@@ -383,6 +400,7 @@
             this.toolEraserButton.Name = "toolEraserButton";
             this.toolEraserButton.Size = new System.Drawing.Size(32, 32);
             this.toolEraserButton.TabIndex = 1;
+            this.toolEraserButton.TabStop = false;
             this.helpTooltip.SetToolTip(this.toolEraserButton, "Eraser");
             this.toolEraserButton.UseVisualStyleBackColor = true;
             this.toolEraserButton.Click += new System.EventHandler(this.toolEraserButton_Click);
@@ -395,6 +413,7 @@
             this.toolPencilButton.Name = "toolPencilButton";
             this.toolPencilButton.Size = new System.Drawing.Size(32, 32);
             this.toolPencilButton.TabIndex = 0;
+            this.toolPencilButton.TabStop = false;
             this.helpTooltip.SetToolTip(this.toolPencilButton, "Pencil (left/right click)");
             this.toolPencilButton.UseVisualStyleBackColor = true;
             this.toolPencilButton.Click += new System.EventHandler(this.toolPencilButton_Click);
@@ -406,7 +425,6 @@
             this.colorSwatchesPanel.Name = "colorSwatchesPanel";
             this.colorSwatchesPanel.Size = new System.Drawing.Size(66, 294);
             this.colorSwatchesPanel.TabIndex = 1;
-            this.helpTooltip.SetToolTip(this.colorSwatchesPanel, "Click to use swatch");
             // 
             // colorPrimaryBox
             // 
@@ -492,10 +510,12 @@
             // tileSplitContainer.Panel1
             // 
             this.tileSplitContainer.Panel1.Controls.Add(this.tilemapBox);
+            this.tileSplitContainer.Panel1MinSize = 100;
             // 
             // tileSplitContainer.Panel2
             // 
             this.tileSplitContainer.Panel2.Controls.Add(this.tileEditorBox);
+            this.tileSplitContainer.Panel2MinSize = 150;
             this.tileSplitContainer.Size = new System.Drawing.Size(674, 500);
             this.tileSplitContainer.SplitterDistance = 400;
             this.tileSplitContainer.TabIndex = 8;
@@ -511,21 +531,6 @@
             this.tileEditorBox.TabIndex = 4;
             this.tileEditorBox.TabStop = false;
             this.tileEditorBox.Text = "Tile Editor";
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferencesToolStripMenuItem});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // preferencesToolStripMenuItem
-            // 
-            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
-            this.preferencesToolStripMenuItem.Text = "Preferences";
-            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
             // 
             // tilePictureBox
             // 
