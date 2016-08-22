@@ -99,5 +99,15 @@ namespace TilemapEditor.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon tilemapicon_L76_icon {
+            get {
+                object obj = ResourceManager.GetObject("tilemapicon_L76_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

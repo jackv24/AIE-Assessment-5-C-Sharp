@@ -509,11 +509,8 @@ namespace TilemapEditor
                             }
                             else if (selectedTool == Tools.Fill)
                             {
-                                using (Graphics g = Graphics.FromImage(bmp))
-                                {
-                                    //Fill the tile with a solid color
-                                    g.FillRectangle(new SolidBrush(color), 0, 0, bmp.Width, bmp.Height);
-                                }
+                                FloodFill(bmp, x, y, bmp.GetPixel(x, y), color);
+                                hasClicked = false;
                             }
 
                             //Update editor and tilemap images to the new bitmap
@@ -626,5 +623,31 @@ namespace TilemapEditor
         private void toolEraserButton_Click(object sender, EventArgs e) { SelectedTool = Tools.Eraser; }
         private void toolFillButton_Click(object sender, EventArgs e) { SelectedTool = Tools.Fill; }
         private void toolColorPickerButton_Click(object sender, EventArgs e) { SelectedTool = Tools.EyeDropper; }
+
+        //Reusable functions
+        void FloodFill(Bitmap bmp, int x, int y, Color targetColor, Color replacementColor)
+        {
+            //Make sure it is within bounds
+            if (x >= bmp.Width || x < 0 || y >= bmp.Height || y < 0)
+                return;
+
+            //Stop if same colour (to be contig
+            if (targetColor == replacementColor)
+                return;
+
+            if (bmp.GetPixel(x, y) != targetColor)
+                return;
+
+            //Set the pixel color
+            bmp.SetPixel(x, y, replacementColor);
+
+            //Call recursively on surrounding pixels
+            FloodFill(bmp, x, y - 1, targetColor, replacementColor);
+            FloodFill(bmp, x, y + 1, targetColor, replacementColor);
+            FloodFill(bmp, x - 1, y, targetColor, replacementColor);
+            FloodFill(bmp, x + 1, y, targetColor, replacementColor);
+
+            return;
+        }
     }
 }

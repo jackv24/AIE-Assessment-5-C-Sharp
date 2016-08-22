@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,10 +61,10 @@
             this.toolEraserButton = new System.Windows.Forms.Button();
             this.toolPencilButton = new System.Windows.Forms.Button();
             this.helpTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.colorSwatchesPanel = new System.Windows.Forms.Panel();
             this.colorPrimaryBox = new System.Windows.Forms.PictureBox();
             this.colorSecondaryBox = new System.Windows.Forms.PictureBox();
             this.switchColoursButton = new System.Windows.Forms.Button();
+            this.colorSwatchesPanel = new System.Windows.Forms.Panel();
             this.colourBox = new System.Windows.Forms.GroupBox();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
             this.toolStripToolStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -418,14 +419,6 @@
             this.toolPencilButton.UseVisualStyleBackColor = true;
             this.toolPencilButton.Click += new System.EventHandler(this.toolPencilButton_Click);
             // 
-            // colorSwatchesPanel
-            // 
-            this.colorSwatchesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.colorSwatchesPanel.Location = new System.Drawing.Point(7, 82);
-            this.colorSwatchesPanel.Name = "colorSwatchesPanel";
-            this.colorSwatchesPanel.Size = new System.Drawing.Size(66, 294);
-            this.colorSwatchesPanel.TabIndex = 1;
-            // 
             // colorPrimaryBox
             // 
             this.colorPrimaryBox.BackColor = System.Drawing.Color.Black;
@@ -461,6 +454,14 @@
             this.switchColoursButton.UseVisualStyleBackColor = true;
             this.switchColoursButton.Click += new System.EventHandler(this.switchColoursButton_Click);
             // 
+            // colorSwatchesPanel
+            // 
+            this.colorSwatchesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.colorSwatchesPanel.Location = new System.Drawing.Point(7, 82);
+            this.colorSwatchesPanel.Name = "colorSwatchesPanel";
+            this.colorSwatchesPanel.Size = new System.Drawing.Size(66, 294);
+            this.colorSwatchesPanel.TabIndex = 1;
+            // 
             // colourBox
             // 
             this.colourBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -486,7 +487,7 @@
             // 
             this.toolStripToolStatus.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripToolStatus.Name = "toolStripToolStatus";
-            this.toolStripToolStatus.Size = new System.Drawing.Size(115, 17);
+            this.toolStripToolStatus.Size = new System.Drawing.Size(116, 17);
             this.toolStripToolStatus.Text = "Selected Tool: Pencil";
             // 
             // statusStrip
@@ -565,6 +566,7 @@
             this.Controls.Add(this.fileOptionsBox);
             this.Controls.Add(this.tilemapOptionsBox);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(600, 350);

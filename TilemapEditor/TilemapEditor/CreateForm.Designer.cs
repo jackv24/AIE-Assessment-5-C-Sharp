@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CreateForm));
             this.tilemapOptionsBox = new System.Windows.Forms.GroupBox();
             this.numRowsUpDown = new System.Windows.Forms.NumericUpDown();
             this.numRowsLabel = new System.Windows.Forms.Label();
@@ -185,9 +186,10 @@
             this.AcceptButton = this.createButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(234, 181);
+            this.ClientSize = new System.Drawing.Size(234, 182);
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.tilemapOptionsBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(250, 220);
             this.MinimizeBox = false;

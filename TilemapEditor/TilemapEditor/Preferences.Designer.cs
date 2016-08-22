@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preferences));
             this.tileOutlineColorLabel = new System.Windows.Forms.Label();
             this.tileOutlineColorBox = new System.Windows.Forms.PictureBox();
             this.selectedTileColorBox = new System.Windows.Forms.PictureBox();
@@ -186,6 +187,7 @@
             this.Controls.Add(this.selectedTileColorLabel);
             this.Controls.Add(this.tileOutlineColorBox);
             this.Controls.Add(this.tileOutlineColorLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(288, 232);
