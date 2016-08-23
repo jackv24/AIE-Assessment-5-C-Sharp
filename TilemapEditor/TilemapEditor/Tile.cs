@@ -32,10 +32,12 @@ namespace TilemapEditor
         {
             get
             {
+                //return rect within tilemap
                 return new Rectangle(x * width, y * height, width, height);
             }
         }
 
+        //Image property handles extracting tile image from tilemap and setting back
         public Image Image
         {
             //Gets image as correct portion of tilemap
@@ -63,7 +65,7 @@ namespace TilemapEditor
                 if (tileMap != null)
                 {
                     Image img = value;
-                    
+
                     using (Graphics g = Graphics.FromImage(tileMap))
                     {
                         g.DrawImage(

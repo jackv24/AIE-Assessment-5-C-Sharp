@@ -12,12 +12,12 @@ namespace TilemapEditor
 {
     public partial class PixelPictureBox : PictureBox
     {
-        [Description("Resises vertically to keep aspect ratio"), Category("Layout")]
+        [Description("Resizes vertically to keep aspect ratio"), Category("Layout")]
         public bool KeepAspect { get; set; }
 
         //Override image property and create new event handler
         public event EventHandler ImageChanged;
-        public Image Image
+        public new Image Image
         {
             get { return base.Image; }
             set

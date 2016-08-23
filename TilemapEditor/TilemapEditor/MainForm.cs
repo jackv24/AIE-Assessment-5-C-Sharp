@@ -22,8 +22,11 @@ namespace TilemapEditor
         bool unsavedChanges = false;
 
         //Tile selection
+        Tile hoveredTile;
         Tile selectedTile;
-        Tile lastSelectedTile;
+
+        //The bitmap being edited (stores changes before they are saved to tilemap)
+        Bitmap workingBitmap;
 
         //Individual tiles
         Tile[,] tiles;
@@ -232,7 +235,6 @@ namespace TilemapEditor
             {
                 tilePictureBox.Image = null;
                 selectedTile = null;
-                lastSelectedTile = null;
 
                 //Calculate rows and columns
                 int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
@@ -328,6 +330,7 @@ namespace TilemapEditor
                 MessageBox.Show("No file to save!");
         }
 
+        //Selecting tiles
         private void tileMapPictureBox_MouseClick(object sender, MouseEventArgs e)
         {
             if (currentTilemap != null)
@@ -337,6 +340,7 @@ namespace TilemapEditor
                 //Cache width and height
                 int width = tiles.GetLength(0);
                 int height = tiles.GetLength(1);
+                int zoomAmount = zoomTrackBar.Value;
 
                 //Get ratio between picturebox size and tile array size
                 float widthRatio = (float)width / box.Width;
@@ -350,13 +354,58 @@ namespace TilemapEditor
                 if (x < width && x >= 0 && y < height && y >= 0)
                 {
                     //Select tile
-                    lastSelectedTile = selectedTile;
                     selectedTile = tiles[x, y];
 
                     //Load tile image in editor
                     tilePictureBox.Image = selectedTile.Image;
                 }
             }
+        }
+
+        private void tileMapPictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (currentTilemap != null)
+            {
+                PixelPictureBox box = (PixelPictureBox)sender;
+
+                //Cache width and height
+                int width = tiles.GetLength(0);
+                int height = tiles.GetLength(1);
+                int zoomAmount = zoomTrackBar.Value;
+
+                //Get ratio between picturebox size and tile array size
+                float widthRatio = (float)width / box.Width;
+                float heightRatio = (float)height / box.Height;
+
+                //Convert picturebox coordinates to tile coordinates
+                int x = (int)Math.Ceiling(e.X * widthRatio) - 1;
+                int y = (int)Math.Ceiling(e.Y * heightRatio) - 1;
+
+                //If mouse is inside picturebox
+                if (x < width && x >= 0 && y < height && y >= 0)
+                {
+                    hoveredTile = tiles[x, y];
+
+                    tileMapPictureBox.Refresh();
+                }
+            }
+        }
+
+        private void tileMapPictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            int zoomAmount = zoomTrackBar.Value;
+
+            if (hoveredTile != null)
+                g.DrawRectangle(
+                    new Pen(Properties.Settings.Default.TileHoverOutlineColor, 1f),
+                    new Rectangle(hoveredTile.Rect.X * zoomAmount, hoveredTile.Rect.Y * zoomAmount, hoveredTile.Rect.Width * zoomAmount, hoveredTile.Rect.Height * zoomAmount));
+
+            if (selectedTile != null)
+                g.DrawRectangle(
+                    new Pen(Properties.Settings.Default.TileSelectedOutlineColor, 1f),
+                    new Rectangle(selectedTile.Rect.X * zoomAmount, selectedTile.Rect.Y * zoomAmount, selectedTile.Rect.Width * zoomAmount, selectedTile.Rect.Height * zoomAmount));
         }
 
         //Tile editor picturebox
@@ -411,15 +460,15 @@ namespace TilemapEditor
                     //If left or right mouse button was clicked
                     if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
                     {
-                        Bitmap bmp = new Bitmap(box.Image);
-                        float widthRatio = (float)bmp.Width / box.Width;
-                        float heightRatio = (float)bmp.Height / box.Height;
+                        workingBitmap = new Bitmap(box.Image);
+                        float widthRatio = (float)workingBitmap.Width / box.Width;
+                        float heightRatio = (float)workingBitmap.Height / box.Height;
 
                         int x = (int)Math.Ceiling(e.X * widthRatio) - 1;
                         int y = (int)Math.Ceiling(e.Y * heightRatio) - 1;
 
                         //If click was made inside picture box
-                        if (x < bmp.Width && x >= 0 && y < bmp.Height && y >= 0)
+                        if (x < workingBitmap.Width && x >= 0 && y < workingBitmap.Height && y >= 0)
                         {
                             //Get desired color based on left or right mouse click
                             Color color = Color.White;
@@ -432,32 +481,28 @@ namespace TilemapEditor
                             {
                                 //Checks are needed for eyedropper as it modifies the colours
                                 if (e.Button == MouseButtons.Left)
-                                    PrimaryColor = bmp.GetPixel(x, y);
+                                    PrimaryColor = workingBitmap.GetPixel(x, y);
                                 else if (e.Button == MouseButtons.Right)
-                                    SecondaryColor = bmp.GetPixel(x, y);
+                                    SecondaryColor = workingBitmap.GetPixel(x, y);
                             }
                             else if (selectedTool == Tools.Pencil)
                             {
                                 //Color pixel
-                                bmp.SetPixel(x, y, color);
+                                workingBitmap.SetPixel(x, y, color);
                             }
                             else if (selectedTool == Tools.Eraser)
                             {
                                 //Erase pixel
-                                bmp.SetPixel(x, y, Color.Transparent);
+                                workingBitmap.SetPixel(x, y, Color.Transparent);
                             }
                             else if (selectedTool == Tools.Fill)
                             {
-                                FloodFill(bmp, x, y, bmp.GetPixel(x, y), color);
+                                FloodFill(workingBitmap, x, y, workingBitmap.GetPixel(x, y), color);
                                 hasClicked = false;
                             }
 
-                            //Update editor and tilemap images to the new bitmap
-                            box.Image = bmp;
-                            selectedTile.Image = bmp;
-
-                            //Refresh tilemap display
-                            tileMapPictureBox.Refresh();
+                            //Update editor image
+                            box.Image = workingBitmap;
                         }
 
                         //Changes were made
@@ -470,6 +515,15 @@ namespace TilemapEditor
         private void tilePictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             hasClicked = false;
+
+            //Update tilemap when drawing is finished
+            if (selectedTile != null)
+            {
+                selectedTile.Image = workingBitmap;
+
+                //Refresh tilemap display
+                tileMapPictureBox.Refresh();
+            }
         }
 
         //Color picking

@@ -371,7 +371,9 @@
             this.tileMapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.tileMapPictureBox.TabIndex = 0;
             this.tileMapPictureBox.TabStop = false;
+            this.tileMapPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.tileMapPictureBox_Paint);
             this.tileMapPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseClick);
+            this.tileMapPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseMove);
             // 
             // toolsBox
             // 
@@ -504,7 +506,7 @@
             // 
             this.toolStripToolStatus.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripToolStatus.Name = "toolStripToolStatus";
-            this.toolStripToolStatus.Size = new System.Drawing.Size(116, 17);
+            this.toolStripToolStatus.Size = new System.Drawing.Size(115, 17);
             this.toolStripToolStatus.Text = "Selected Tool: Pencil";
             // 
             // statusStrip
