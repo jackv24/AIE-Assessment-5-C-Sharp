@@ -12,32 +12,6 @@ namespace TilemapEditor
 {
     public partial class PixelPictureBox : PictureBox
     {
-        private Color borderColor;
-        private int borderWidth;
-        [Browsable(true)]
-
-        public bool drawOver = false;
-
-        public Color BorderColor
-        {
-            get { return borderColor; }
-            set
-            {
-                borderColor = value;
-                Invalidate();
-            }
-        }
-        [Browsable(true)]
-        public int BorderWidth
-        {
-            get { return borderWidth; }
-            set
-            {
-                borderWidth = value;
-                Invalidate();
-            }
-        }
-
         [Description("Resises vertically to keep aspect ratio"), Category("Layout")]
         public bool KeepAspect { get; set; }
 
@@ -60,9 +34,6 @@ namespace TilemapEditor
 
             Resize += new EventHandler(box_Resize);
             ImageChanged += new EventHandler(box_Resize);
-
-            borderColor = Color.Empty;
-            borderWidth = 1;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -73,15 +44,7 @@ namespace TilemapEditor
             //Fixes issue where image seemed to be shifted half a pixel
             pe.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 
-            //If basic outline, Draw rectangle UNDER image
-            if (!drawOver)
-                pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
-
             base.OnPaint(pe);
-
-            //If not basic outline, Draw rectangle OVER image
-            if(drawOver)
-                pe.Graphics.DrawRectangle(new Pen(borderColor, borderWidth), borderWidth, borderWidth, Size.Width - borderWidth, Size.Height - borderWidth);
         }
 
         private void box_Resize(object sender, EventArgs e)

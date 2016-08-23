@@ -22,11 +22,11 @@ namespace TilemapEditor
         bool unsavedChanges = false;
 
         //Tile selection
-        PixelPictureBox selectedTile;
-        PixelPictureBox lastSelectedTile;
+        Tile selectedTile;
+        Tile lastSelectedTile;
 
         //Individual tiles
-        PixelPictureBox[,] pictureBoxes;
+        Tile[,] tiles;
 
         public enum Tools
         {
@@ -96,17 +96,7 @@ namespace TilemapEditor
 
             tilePictureBox.BackColor = Properties.Settings.Default.BackgroundColor;
             tilemapPanel.BackColor = Properties.Settings.Default.BackgroundColor;
-
-            //Reset existing tile outline colours
-            if (pictureBoxes != null)
-                for (int i = 0; i < pictureBoxes.GetLength(0); i++)
-                    for (int j = 0; j < pictureBoxes.GetLength(1); j++)
-                    {
-                        if(pictureBoxes[i, j] == selectedTile)
-                            pictureBoxes[i, j].BorderColor = Properties.Settings.Default.TileSelectedOutlineColor;
-                        else
-                            pictureBoxes[i, j].BorderColor = Properties.Settings.Default.TileOutlineColor;
-                    }
+            tileMapPictureBox.BackColor = Properties.Settings.Default.BackgroundColor;
         }
 
         //Form events
@@ -240,50 +230,35 @@ namespace TilemapEditor
 
             if (currentTilemap != null)
             {
-                //Remove existing pictureboxes
-                while (tilemapPanel.Controls.Count > 0)
-                    tilemapPanel.Controls[0].Dispose();
-
                 tilePictureBox.Image = null;
+                selectedTile = null;
+                lastSelectedTile = null;
 
                 //Calculate rows and columns
                 int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
                 int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
 
                 //Create new array at specified sizes
-                pictureBoxes = new PixelPictureBox[numColumns, numRows];
+                tiles = new Tile[numColumns, numRows];
 
-                //Generate picturebox grid
-                for (int i = 0; i < numColumns; i++)
-                {
-                    for (int j = 0; j < numRows; j++)
+                //Set values for tiles
+                for(int i = 0; i < tiles.GetLength(0); i++)
+                    for(int j = 0; j < tiles.GetLength(1); j++)
                     {
-                        //Create new bitmap
-                        Bitmap bmp = new Bitmap(tileWidth, tileHeight);
-                        //Draw relevant pixels to bitmap
-                        Graphics g = Graphics.FromImage(bmp);
-                        g.DrawImage(currentTilemap, new Rectangle(0, 0, tileWidth, tileHeight), new Rectangle(i * tileWidth, j * tileHeight, tileWidth, tileHeight), GraphicsUnit.Pixel);
-                        g.Dispose();
+                        tiles[i, j] = new Tile();
 
-                        //Create new picturebox as child of tilemapPanel
-                        PixelPictureBox box = new PixelPictureBox();
-                        tilemapPanel.Controls.Add(box);
-                        //Set properties
-                        box.Location = new Point(i * tileWidth * zoomAmount, j * tileHeight * zoomAmount);
-                        box.Size = new Size(tileWidth * zoomAmount, tileHeight * zoomAmount);
-                        box.Image = bmp;
-                        box.SizeMode = PictureBoxSizeMode.StretchImage;
-                        box.BorderColor = Properties.Settings.Default.TileOutlineColor;
+                        tiles[i, j].x = i;
+                        tiles[i, j].y = j;
 
-                        //Set picturebox event handlers
-                        box.MouseEnter += new EventHandler(pictureBoxes_MouseEnter);
-                        box.MouseLeave += new EventHandler(pictureBoxes_MouseLeave);
-                        box.Click += new EventHandler(pictureBoxes_Click);
+                        tiles[i, j].width = tileWidth;
+                        tiles[i, j].height = tileHeight;
 
-                        //Add to arrays
-                        pictureBoxes[i, j] = box;
+                        tiles[i, j].tileMap = currentTilemap;
                     }
-                }
+
+                //Set tilemap image
+                tileMapPictureBox.Image = currentTilemap;
+                tileMapPictureBox.Size = new Size(currentTilemap.Width * zoomAmount, currentTilemap.Height * zoomAmount);
             }
         }
 
@@ -319,39 +294,18 @@ namespace TilemapEditor
                     return;
             }
 
-            //Cache values from form
-            int tileWidth = (int)tileWidthUpDown.Value;
-            int tileHeight = (int)tileHeightUpDown.Value;
-
             if(currentTilemap == null && lastFilePath != "")
                 //load tilemap (may have been disposed
                 currentTilemap = Image.FromFile(lastFilePath);
 
             if(currentTilemap != null)
             {
-                //Calculate rows and columns
-                int numRows = (int)Math.Round((float)currentTilemap.Height / tileHeight);
-                int numColumns = (int)Math.Round((float)currentTilemap.Width / tileWidth);
+                //Create new bitmap for output tilemap
+                Bitmap outputMap = new Bitmap(currentTilemap);
 
                 //Free image so that it can be overwritten
                 currentTilemap.Dispose();
                 currentTilemap = null;
-
-                //Create new bitmap for output tilemap
-                Bitmap outputMap = new Bitmap(numColumns * tileWidth, numRows * tileHeight);
-
-                using (Graphics g = Graphics.FromImage(outputMap))
-                {
-                    //Iterate through tile map
-                    for (int i = 0; i < numColumns; i++)
-                    {
-                        for (int j = 0; j < numRows; j++)
-                        {
-                            //Draw relevant pixels to bitmap
-                            g.DrawImage(pictureBoxes[i, j].Image, new Rectangle(i * tileWidth, j * tileHeight, tileWidth, tileHeight), new Rectangle(0, 0, tileWidth, tileHeight), GraphicsUnit.Pixel);
-                        }
-                    }
-                }
 
                 //Try to save file (catches exception)
                 try
@@ -374,50 +328,35 @@ namespace TilemapEditor
                 MessageBox.Show("No file to save!");
         }
 
-        //Tileset Picture box event handlers
-        private void pictureBoxes_MouseEnter(object sender, EventArgs e)
+        private void tileMapPictureBox_MouseClick(object sender, MouseEventArgs e)
         {
-            PixelPictureBox box = (PixelPictureBox)sender;
-
-            if (box != selectedTile)
+            if (currentTilemap != null)
             {
-                box.BorderColor = Properties.Settings.Default.TileHoverOutlineColor;
-                box.drawOver = true;
+                PixelPictureBox box = (PixelPictureBox)sender;
+
+                //Cache width and height
+                int width = tiles.GetLength(0);
+                int height = tiles.GetLength(1);
+
+                //Get ratio between picturebox size and tile array size
+                float widthRatio = (float)width / box.Width;
+                float heightRatio = (float)height / box.Height;
+
+                //Convert picturebox coordinates to tile coordinates
+                int x = (int)Math.Ceiling(e.X * widthRatio) - 1;
+                int y = (int)Math.Ceiling(e.Y * heightRatio) - 1;
+
+                //If click was made inside picture box
+                if (x < width && x >= 0 && y < height && y >= 0)
+                {
+                    //Select tile
+                    lastSelectedTile = selectedTile;
+                    selectedTile = tiles[x, y];
+
+                    //Load tile image in editor
+                    tilePictureBox.Image = selectedTile.Image;
+                }
             }
-        }
-
-        private void pictureBoxes_MouseLeave(object sender, EventArgs e)
-        {
-            PixelPictureBox box = (PixelPictureBox)sender;
-
-            if (box != selectedTile)
-            {
-                box.BorderColor = Properties.Settings.Default.TileOutlineColor;
-                box.drawOver = false;
-            }
-        }
-
-        private void pictureBoxes_Click(object sender, EventArgs e)
-        {
-            PixelPictureBox box = (PixelPictureBox)sender;
-
-            //Cache last tle and select new tile
-            lastSelectedTile = selectedTile;
-            selectedTile = box;
-
-            //Deselect last tile
-            if (lastSelectedTile != null)
-            {
-                lastSelectedTile.BorderColor = Properties.Settings.Default.TileOutlineColor;
-                lastSelectedTile.drawOver = false;
-            }
-
-            //Set border color of selected tile
-            selectedTile.BorderColor = Properties.Settings.Default.TileSelectedOutlineColor;
-            selectedTile.drawOver = true;
-
-            //Display selected tile in editor
-            tilePictureBox.Image = selectedTile.Image;
         }
 
         //Tile editor picturebox
@@ -505,7 +444,7 @@ namespace TilemapEditor
                             else if (selectedTool == Tools.Eraser)
                             {
                                 //Erase pixel
-                                bmp.SetPixel(x, y, Color.Empty);
+                                bmp.SetPixel(x, y, Color.Transparent);
                             }
                             else if (selectedTool == Tools.Fill)
                             {
@@ -516,6 +455,9 @@ namespace TilemapEditor
                             //Update editor and tilemap images to the new bitmap
                             box.Image = bmp;
                             selectedTile.Image = bmp;
+
+                            //Refresh tilemap display
+                            tileMapPictureBox.Refresh();
                         }
 
                         //Changes were made

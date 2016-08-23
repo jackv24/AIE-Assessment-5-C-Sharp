@@ -55,6 +55,7 @@
             this.newButton = new System.Windows.Forms.Button();
             this.tilemapBox = new System.Windows.Forms.GroupBox();
             this.tilemapPanel = new System.Windows.Forms.Panel();
+            this.tileMapPictureBox = new TilemapEditor.PixelPictureBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
             this.toolColorPickerButton = new System.Windows.Forms.Button();
             this.toolFillButton = new System.Windows.Forms.Button();
@@ -79,6 +80,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).BeginInit();
             this.fileOptionsBox.SuspendLayout();
             this.tilemapBox.SuspendLayout();
+            this.tilemapPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).BeginInit();
             this.toolsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).BeginInit();
@@ -350,11 +353,25 @@
             // 
             this.tilemapPanel.AutoScroll = true;
             this.tilemapPanel.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.tilemapPanel.Controls.Add(this.tileMapPictureBox);
             this.tilemapPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tilemapPanel.Location = new System.Drawing.Point(5, 18);
             this.tilemapPanel.Name = "tilemapPanel";
             this.tilemapPanel.Size = new System.Drawing.Size(390, 477);
             this.tilemapPanel.TabIndex = 0;
+            // 
+            // tileMapPictureBox
+            // 
+            this.tileMapPictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.tileMapPictureBox.Image = null;
+            this.tileMapPictureBox.KeepAspect = false;
+            this.tileMapPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.tileMapPictureBox.Name = "tileMapPictureBox";
+            this.tileMapPictureBox.Size = new System.Drawing.Size(373, 260);
+            this.tileMapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.tileMapPictureBox.TabIndex = 0;
+            this.tileMapPictureBox.TabStop = false;
+            this.tileMapPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseClick);
             // 
             // toolsBox
             // 
@@ -537,8 +554,6 @@
             // 
             this.tilePictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.tilePictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.tilePictureBox.BorderColor = System.Drawing.Color.Empty;
-            this.tilePictureBox.BorderWidth = 1;
             this.tilePictureBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tilePictureBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.tilePictureBox.Image = null;
@@ -584,6 +599,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tileWidthUpDown)).EndInit();
             this.fileOptionsBox.ResumeLayout(false);
             this.tilemapBox.ResumeLayout(false);
+            this.tilemapPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).EndInit();
             this.toolsBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).EndInit();
@@ -645,6 +662,7 @@
         private System.Windows.Forms.GroupBox tileEditorBox;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+        private PixelPictureBox tileMapPictureBox;
     }
 }
 
