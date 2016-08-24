@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,10 +93,15 @@ namespace TilemapEditor
             SelectedTool = Tools.Pencil;
         }
 
+        /// <summary>
+        /// Loads settings and values into controls
+        /// </summary>
         public void LoadPrefs()
         {
             tileWidthUpDown.Value = Properties.Settings.Default.TileWidth;
             tileHeightUpDown.Value = Properties.Settings.Default.TileHeight;
+
+            zoomTrackBar.Value = Properties.Settings.Default.ZoomAmount;
 
             tilePictureBox.BackColor = Properties.Settings.Default.BackgroundColor;
             tilemapPanel.BackColor = Properties.Settings.Default.BackgroundColor;
@@ -122,6 +128,8 @@ namespace TilemapEditor
             //Save settings
             Properties.Settings.Default.TileWidth = (int)tileWidthUpDown.Value;
             Properties.Settings.Default.TileHeight = (int)tileHeightUpDown.Value;
+
+            Properties.Settings.Default.ZoomAmount = zoomTrackBar.Value;
 
             Properties.Settings.Default.Save();
         }
@@ -179,10 +187,6 @@ namespace TilemapEditor
 
             if (result == DialogResult.Yes)
             {
-                //Remove pictureboxes
-                while (tilemapPanel.Controls.Count > 0)
-                    tilemapPanel.Controls[0].Dispose();
-
                 tilePictureBox.Image = null;
                 lastFilePath = "";
 
@@ -206,8 +210,9 @@ namespace TilemapEditor
 
                     if (selectFile.ShowDialog() == DialogResult.OK)
                     {
-                        //load tilemap
-                        currentTilemap = Image.FromFile(selectFile.FileName);
+                        //Loads tilemap and frees the file
+                        using (Bitmap bmp = new Bitmap(selectFile.FileName))
+                            currentTilemap = new Bitmap(bmp);
 
                         lastFilePath = selectFile.FileName;
                     }
@@ -266,17 +271,23 @@ namespace TilemapEditor
 
         private void SaveFile(bool showDialog)
         {
+            ImageFormat[] formats = { ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Jpeg, ImageFormat.Gif, ImageFormat.Bmp };
+            int saveFormatIndex = 1;
+
             //Only show the dialog if showdialog is true and there is a tilemap to save (also save as if there is no lastFilePath)
             if (showDialog && currentTilemap != null || lastFilePath == "")
             {
                 using (SaveFileDialog selectFile = new SaveFileDialog())
                 {
-                    selectFile.Filter = "Image Files (*.jpeg, *.png, *.jpg, *.gif)|*.jpeg;*.png;*.jpg;*.gif|JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+                    selectFile.Filter = "JPEG File (*.jpeg)|*.jpeg|PNG File (*.png)|*.png|JPG File (*.jpg)|*.jpg|GIF File (*.gif)|*.gif|BMP File (*.bmp)|*.bmp";
                     selectFile.Title = "Please select a save location.";
-                    selectFile.FilterIndex = 3;
+                    selectFile.FilterIndex = 2;
 
                     if (selectFile.ShowDialog() == DialogResult.OK)
+                    {
                         lastFilePath = selectFile.FileName;
+                        saveFormatIndex = selectFile.FilterIndex - 1;
+                    }
                     else
                         return;
                 }
@@ -296,38 +307,39 @@ namespace TilemapEditor
                     return;
             }
 
-            if(currentTilemap == null && lastFilePath != "")
-                //load tilemap (may have been disposed
-                currentTilemap = Image.FromFile(lastFilePath);
-
-            if(currentTilemap != null)
+            if (currentTilemap != null)
             {
                 //Create new bitmap for output tilemap
-                Bitmap outputMap = new Bitmap(currentTilemap);
-
-                //Free image so that it can be overwritten
-                currentTilemap.Dispose();
-                currentTilemap = null;
-
-                //Try to save file (catches exception)
-                try
+                using (Bitmap outputMap = new Bitmap(currentTilemap))
                 {
-                    using (FileStream fs = new FileStream(lastFilePath, FileMode.Create, FileAccess.Write))
+                    //Try to save file (catches exception)
+                    try
                     {
-                        outputMap.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
+                        using (FileStream fs = new FileStream(lastFilePath, FileMode.Create, FileAccess.Write))
+                        {
+                            outputMap.Save(fs, formats[saveFormatIndex]);
 
-                        unsavedChanges = false;
-                        MessageBox.Show("File saved!");
+                            unsavedChanges = false;
+                            MessageBox.Show("File saved!");
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    //Show error if exception is thrown
-                    MessageBox.Show("Error: Could not access the file.\n\n" + ex.Message, "Saving failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (Exception ex)
+                    {
+                        //Show error if exception is thrown
+                        MessageBox.Show("Error: Could not access the file.\n\n" + ex.Message, "Saving failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             else
                 MessageBox.Show("No file to save!");
+        }
+
+        private void zoomTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            int zoomAmount = ((TrackBar)sender).Value;
+
+            if(currentTilemap != null)
+                tileMapPictureBox.Size = new Size(currentTilemap.Width * zoomAmount, currentTilemap.Height * zoomAmount);
         }
 
         //Selecting tiles
@@ -389,6 +401,13 @@ namespace TilemapEditor
                     tileMapPictureBox.Refresh();
                 }
             }
+        }
+
+        private void tileMapPictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            hoveredTile = null;
+
+            tileMapPictureBox.Refresh();
         }
 
         private void tileMapPictureBox_Paint(object sender, PaintEventArgs e)
@@ -547,6 +566,10 @@ namespace TilemapEditor
             }
         }
 
+        /// <summary>
+        /// Adds a clickable color box to the list of swatches
+        /// </summary>
+        /// <param name="color"></param>
         private void AddSwatch(Color color)
         {
             //Create new picturebox as child of tilemapPanel
@@ -584,7 +607,9 @@ namespace TilemapEditor
                 SecondaryColor = ((PictureBox)sender).BackColor;
         }
 
-        //Switch the primary and secondary colours
+        /// <summary>
+        /// Switches the primary and secondary colors
+        /// </summary>
         private void SwitchColors()
         {
             //Swap colours (not using public property so logic is skipped)
@@ -621,6 +646,14 @@ namespace TilemapEditor
         private void toolColorPickerButton_Click(object sender, EventArgs e) { SelectedTool = Tools.EyeDropper; }
 
         //Reusable functions
+        /// <summary>
+        /// Replaces all of a target color with a replacement color (contiguous)
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="targetColor"></param>
+        /// <param name="replacementColor"></param>
         void FloodFill(Bitmap bmp, int x, int y, Color targetColor, Color replacementColor)
         {
             //Make sure it is within bounds

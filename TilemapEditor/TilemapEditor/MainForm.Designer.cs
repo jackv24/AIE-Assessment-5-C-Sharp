@@ -55,7 +55,6 @@
             this.newButton = new System.Windows.Forms.Button();
             this.tilemapBox = new System.Windows.Forms.GroupBox();
             this.tilemapPanel = new System.Windows.Forms.Panel();
-            this.tileMapPictureBox = new TilemapEditor.PixelPictureBox();
             this.toolsBox = new System.Windows.Forms.GroupBox();
             this.toolColorPickerButton = new System.Windows.Forms.Button();
             this.toolFillButton = new System.Windows.Forms.Button();
@@ -72,6 +71,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.tileSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tileEditorBox = new System.Windows.Forms.GroupBox();
+            this.tileMapPictureBox = new TilemapEditor.PixelPictureBox();
             this.tilePictureBox = new TilemapEditor.PixelPictureBox();
             this.menuStrip1.SuspendLayout();
             this.tilemapOptionsBox.SuspendLayout();
@@ -81,7 +81,6 @@
             this.fileOptionsBox.SuspendLayout();
             this.tilemapBox.SuspendLayout();
             this.tilemapPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).BeginInit();
             this.toolsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).BeginInit();
@@ -92,6 +91,7 @@
             this.tileSplitContainer.Panel2.SuspendLayout();
             this.tileSplitContainer.SuspendLayout();
             this.tileEditorBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -182,9 +182,9 @@
             // tilemapOptionsBox
             // 
             this.tilemapOptionsBox.Controls.Add(this.zoomLabel);
-            this.tilemapOptionsBox.Controls.Add(this.zoomTrackBar);
             this.tilemapOptionsBox.Controls.Add(this.refreshButton);
             this.tilemapOptionsBox.Controls.Add(this.tileHeightUpDown);
+            this.tilemapOptionsBox.Controls.Add(this.zoomTrackBar);
             this.tilemapOptionsBox.Controls.Add(this.tileHeightLabel);
             this.tilemapOptionsBox.Controls.Add(this.tileWidthUpDown);
             this.tilemapOptionsBox.Controls.Add(this.tileWidthLabel);
@@ -199,7 +199,7 @@
             // 
             this.zoomLabel.AutoSize = true;
             this.zoomLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.zoomLabel.Location = new System.Drawing.Point(6, 70);
+            this.zoomLabel.Location = new System.Drawing.Point(6, 105);
             this.zoomLabel.Name = "zoomLabel";
             this.zoomLabel.Size = new System.Drawing.Size(94, 16);
             this.zoomLabel.TabIndex = 10;
@@ -207,17 +207,18 @@
             // 
             // zoomTrackBar
             // 
-            this.zoomTrackBar.Location = new System.Drawing.Point(104, 68);
+            this.zoomTrackBar.Location = new System.Drawing.Point(104, 103);
             this.zoomTrackBar.Maximum = 5;
             this.zoomTrackBar.Minimum = 1;
             this.zoomTrackBar.Name = "zoomTrackBar";
             this.zoomTrackBar.Size = new System.Drawing.Size(89, 45);
             this.zoomTrackBar.TabIndex = 8;
             this.zoomTrackBar.Value = 2;
+            this.zoomTrackBar.ValueChanged += new System.EventHandler(this.zoomTrackBar_ValueChanged);
             // 
             // refreshButton
             // 
-            this.refreshButton.Location = new System.Drawing.Point(119, 119);
+            this.refreshButton.Location = new System.Drawing.Point(119, 68);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
             this.refreshButton.TabIndex = 9;
@@ -360,21 +361,6 @@
             this.tilemapPanel.Size = new System.Drawing.Size(390, 477);
             this.tilemapPanel.TabIndex = 0;
             // 
-            // tileMapPictureBox
-            // 
-            this.tileMapPictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.tileMapPictureBox.Image = null;
-            this.tileMapPictureBox.KeepAspect = false;
-            this.tileMapPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.tileMapPictureBox.Name = "tileMapPictureBox";
-            this.tileMapPictureBox.Size = new System.Drawing.Size(373, 260);
-            this.tileMapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.tileMapPictureBox.TabIndex = 0;
-            this.tileMapPictureBox.TabStop = false;
-            this.tileMapPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.tileMapPictureBox_Paint);
-            this.tileMapPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseClick);
-            this.tileMapPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseMove);
-            // 
             // toolsBox
             // 
             this.toolsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -506,7 +492,7 @@
             // 
             this.toolStripToolStatus.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripToolStatus.Name = "toolStripToolStatus";
-            this.toolStripToolStatus.Size = new System.Drawing.Size(115, 17);
+            this.toolStripToolStatus.Size = new System.Drawing.Size(116, 17);
             this.toolStripToolStatus.Text = "Selected Tool: Pencil";
             // 
             // statusStrip
@@ -551,6 +537,22 @@
             this.tileEditorBox.TabIndex = 4;
             this.tileEditorBox.TabStop = false;
             this.tileEditorBox.Text = "Tile Editor";
+            // 
+            // tileMapPictureBox
+            // 
+            this.tileMapPictureBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.tileMapPictureBox.Image = null;
+            this.tileMapPictureBox.KeepAspect = false;
+            this.tileMapPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.tileMapPictureBox.Name = "tileMapPictureBox";
+            this.tileMapPictureBox.Size = new System.Drawing.Size(373, 260);
+            this.tileMapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.tileMapPictureBox.TabIndex = 0;
+            this.tileMapPictureBox.TabStop = false;
+            this.tileMapPictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.tileMapPictureBox_Paint);
+            this.tileMapPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseClick);
+            this.tileMapPictureBox.MouseLeave += new System.EventHandler(this.tileMapPictureBox_MouseLeave);
+            this.tileMapPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tileMapPictureBox_MouseMove);
             // 
             // tilePictureBox
             // 
@@ -602,7 +604,6 @@
             this.fileOptionsBox.ResumeLayout(false);
             this.tilemapBox.ResumeLayout(false);
             this.tilemapPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).EndInit();
             this.toolsBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.colorPrimaryBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorSecondaryBox)).EndInit();
@@ -614,6 +615,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tileSplitContainer)).EndInit();
             this.tileSplitContainer.ResumeLayout(false);
             this.tileEditorBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tileMapPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tilePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

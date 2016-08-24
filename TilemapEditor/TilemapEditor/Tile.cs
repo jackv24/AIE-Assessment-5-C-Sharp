@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace TilemapEditor
@@ -68,6 +69,13 @@ namespace TilemapEditor
 
                     using (Graphics g = Graphics.FromImage(tileMap))
                     {
+                        //Set clipping to only this tile
+                        g.SetClip(Rect);
+
+                        //Clear area to be overwritted by new image
+                        g.Clear(Color.Empty);
+
+                        //Write tile image into tilemap
                         g.DrawImage(
                             img,
                             Rect,

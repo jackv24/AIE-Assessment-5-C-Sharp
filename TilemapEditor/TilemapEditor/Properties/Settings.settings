@@ -26,5 +26,8 @@
     <Setting Name="BackgroundColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">WindowFrame</Value>
     </Setting>
+    <Setting Name="ZoomAmount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
